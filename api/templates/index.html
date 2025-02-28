@@ -8,9 +8,6 @@
   
     gtag('config', 'G-L2XQZ2F8P3');
   </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
-
-  
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -192,7 +189,7 @@
       }
       
       .drawer-toggle {
-          background-image: url("bot.png");
+          background-image: url("../static/images/bot.png");
       background-size: 50px;
       background-repeat: no-repeat;
       background-position: left center;
@@ -255,7 +252,8 @@
     <!-- Right Side Drawer -->
     <div class="side-drawer" id="sideDrawer">
           <button class="close-drawer" id="closeDrawer"></button>
-          <object data="./chat.html" width="445px" height="920"></object>
+          <!-- <object data="./chat.html" width="445px" height="920"></object> -->
+           <iframe src="/chat" width="445px" height="920"></iframe>
     </div>
     
     <script>
