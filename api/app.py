@@ -67,6 +67,7 @@ class Mentor:
         self.vector_store = None
         self.retriever = None
         self.chain = None
+        self.model = None
         self.init_vector_store()
 
         # Initialize models
@@ -370,6 +371,11 @@ def index():
     session_id = ensure_session()
     return render_template('index.html')
 
+@app.route('/chat')
+def chat():
+    """Render the chat application page"""
+    session_id = ensure_session()
+    return render_template('chat.html')
 
 @app.route('/admin', methods=['GET'])
 def admin_view():
