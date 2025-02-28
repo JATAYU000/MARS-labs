@@ -208,13 +208,17 @@
     }
     
     .drawer-toggle {
+        background-image: url("bot.png");
+    background-size: 55px;
+    background-repeat: no-repeat;
+    background-position: left center;
       position: fixed;
       top: 70px;
       right: 20px;
       z-index: 10000;
-      width: 50px;
-      height: 50px;
-      background-color: #4CAF50;
+      width: 55px;
+      height: 55px;
+      background-color: #d10448;
       color: white;
       border: none;
       border-radius: 50%;
@@ -228,7 +232,7 @@
     }
     
     .drawer-toggle:hover {
-      background-color: #3e8e41;
+      background-color: #81062f;
       transform: scale(1.05);
     }
     
@@ -247,6 +251,11 @@
       font-size: 20px;
       cursor: pointer;
     }
+    iframe {
+    flex-grow: 1; 
+    width: 100%;
+    border: none;
+}
   
   </style>
 </head>
@@ -254,7 +263,9 @@
 
   <!-- Drawer Button with Icon -->
   <button class="drawer-toggle" id="drawerToggle">
-    <i class="fas fa-bars"></i>
+    <i class="fas fa-bars">
+        <!-- <img src="/MARS-labs/web_app/images/bot.png" alt="Logo" width="20" height="20"> -->
+    </i>
   </button>
   
   <!-- Right Side Drawer -->
@@ -264,9 +275,7 @@
         <h2>Martian Prodogy</h2>
         <button class="close-drawer" id="closeDrawer">×</button>
       </div>
-      <div>
-        <iframe src="chat.html" width="440px" height="100%"></iframe>
-      </div>
+        <object data="chat.html" width="430px" height="800"></object>
     </div>
   </div>
   
