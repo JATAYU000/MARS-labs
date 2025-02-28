@@ -265,6 +265,13 @@ def index():
 def admin_view():
     return render_template('admin_page.html')
 
+@app.route('/progress', methods=['GET'])
+def progress():
+    return render_template('progress_page.html')
+
+@app.route('/chat', methods=['GET'])
+def chat():
+    return render_template('chat.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
