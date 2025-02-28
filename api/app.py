@@ -34,7 +34,7 @@ set_verbose(True)
 load_dotenv()
 
 # Selecting the model
-selected_model = "ollama"
+selected_model = "gemini"
 
 
 class Mentor:
@@ -381,16 +381,21 @@ def ask_question():
     """Process user questions"""
     data = request.json
     user_text = data.get('message', '').strip()
+    model_selection = data.get('model')
 
     if not user_text:
         return jsonify({'error': 'Empty message'}), 400
 
     session_id = ensure_session()
+    
+    if model_selection and chat_instances[session_id].selected_model != model_selection:
+       
+        chat_instances[session_id] = Mentor(selected_model=model_selection)
+    
     assistant = chat_instances[session_id]
-
     agent_text = assistant.ask(user_text)
 
-    # Update session messages
+
     session['messages'].append({'content': user_text, 'is_user': True})
     session['messages'].append({'content': agent_text, 'is_user': False})
 

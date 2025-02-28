@@ -519,7 +519,7 @@
                 <img src="../static/images/bot.png" height="30px" width="45px" alt="Bot" id="avatarImage">
             </div>
             <div class="chat-info">
-                <h2 id="botName">OLLAMA</h2>
+                <h2 id="botName">ollama</h2>
                 <p><span class="status-indicator"></span>Online</p>
             </div>
             <div class="header-actions">
@@ -527,30 +527,28 @@
                 <i class="fas fa-ellipsis-v" id="menuButton"></i>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <ul>
-                        <li id="optionA">Option A</li>
-                        <li id="optionB">Option B</li>
-                        <li id="optionC">Option C</li>
+                        <li id="optionA">Clear</li>
                     </ul>
                 </div>
             </div>
         </div>
         
         <div class="model-selection" id="modelSelection">
-            <div class="model-option" data-model="martian" data-image="../static/images/bot3.png" data-name="OLLAMA">
+            <div class="model-option" data-model="martian" data-image="../static/images/bot3.png" data-name="ollama">
                 <div class="model-avatar">
                     <img src="../static/images/bot3.png" alt="Martian">
                 </div>
                 <div class="model-info">
-                    <div class="model-name">OLLAMA</div>
+                    <div class="model-name">ollama</div>
                     <div class="model-description">Advanced RAG based</div>
                 </div>
             </div>
-            <div class="model-option" data-model="earth" data-image="../static/images/bot2.png" data-name="GEMINI">
+            <div class="model-option" data-model="earth" data-image="../static/images/bot2.png" data-name="gemini">
                 <div class="model-avatar">
                     <img src="../static/images/bot2.png" alt="Earth">
                 </div>
                 <div class="model-info">
-                    <div class="model-name">GEMINI</div>
+                    <div class="model-name">gemini</div>
                     <div class="model-description">Finetuned Model</div>
                 </div>
             </div>
@@ -771,7 +769,6 @@
                     messageInput.value = '';
                     typingIndicator.style.display = 'flex';
                     scrollToBottom();
-                    console.log(botName.textContent)
                     fetch('/ask', {
                         method: 'POST',
                         headers: {
@@ -892,7 +889,7 @@
                     
                     typingIndicator.style.display = 'flex';
                     scrollToBottom();
-                    console.log(botName.textContent)
+            
                     fetch('/ask', {
                         method: 'POST',
                         headers: {
