@@ -1,7 +1,7 @@
 from flask import Flask , render_template , jsonify , request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+from googletrans import Translator
 
 app = Flask(__name__)
 
@@ -17,17 +17,15 @@ db.init_app(app)
 
 migrate = Migrate(app,db)
 
+translate = Translator()
+
 class Chatbot(db.Model):
     
-    id = db.Column(db.Integer , primary_key = True)
-    question = db.Column(db.String(200), unique=True, nullable=False)
-    answer = db.Column(db.String(500),nullable = False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_message = db.Column(db.String(500), nullable=False)
+    translated_message = db.Column(db.String(500), nullable=True)
+    response = db.Column(db.String(500), nullable=False)
 
-    def res(user_input):
-        response = Chatbot.query.filter_by(question = user_input).first()
-        if response:
-            return response.answer
-        return 'Sorry idk'
 
 class User(db.Model):
     __bind_key__ = 'db1'
@@ -49,11 +47,34 @@ class User_Progress(db.Model):
     __bind_key__ = 'db2'
     __tablename__ = 'Progress'
     id = db.Column(db.Integer, primary_key=True)
-    classes = db.Column(db.String(50), nullable=False)
-    assignments = db.Column(db.String(50),nullable=False)
-    test = db.Column(db.String(50),nullable=False)
-    time_spend = db.Column(db.String(50),nullable=False)
-    
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
+    subjects = db.relationship('Subject', backref='progress', lazy = True)
+
+class Subject(db.Model):
+    __bind_key__ = 'db2'
+    __tablename__ = 'subject'
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(50),  nullable=False)
+    user_progress_id = db.Column(db.Integer, db.ForeignKey('user_progress.id'),nullable = False)
+    simulation = db.relationship('Simulation', backref = 'subject', lazy = True)
+
+class Simulation(db.Model):
+    __bind_key__ = 'db2'
+    __tablename__ = 'simulation'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
+    progress = db.relationship('Progress', backref='simulation', uselist=False)
+
+class Progress(db.Model):
+    __bind_key__='db2'
+    __tablename__ = 'progress'
+    id = db.Column(db.Integer, primary_key = True)
+    simulation_id = db.Column(db.Integer, db.ForeignKey('simulation.id'), nullable = False)
+    quiz = db.Column(db.Boolean, default = False)
+    theory = db.Column(db.Boolean, default = False)
+    simulation = db.Column(db.Boolean, default=False)
+    animation = db.Column(db.Boolean, default=False)
 
 @app.route('/')
 def index():
@@ -61,14 +82,32 @@ def index():
     progress = User_Progress.query.all()
     return render_template('index.html',users=users,progress=progress)
 
-@app.route('/chatbot', methods=['GET'])
+@app.route('/chatbot', methods=['POST'])
 def chatbot():
-    user_input = request.args.get('question')
-    if user_input:
-        response = Chatbot.res(user_input)
-        return jsonify({"answer": response})
-    return jsonify({"error": "No question provided"}), 400
+    data = request.get_json()
+    user_input = data.get('message','')
 
+    if not user_input:
+        return jsonify({'error' : 'No message provided'}) ,400
+    language = translate.detect(user_input).lang
+    print(f'Detected lang :{language}')
+
+    t_lang = user_input
+    if language != 'en':
+        t_lang = translate.translate(user_input,dest = 'en').text
+        print(t_lang)
+
+    llm_response = f"LLM response: {t_lang}"  
+
+    history_entry = Chatbot(
+        user_message=user_input,
+        translated_message=t_lang if language != 'en' else None,
+        response=llm_response
+    )
+    db.session.add(history_entry)
+    db.session.commit()
+
+    return jsonify({"response": llm_response})
 
 @app.route('/users',methods = ['GET'])
 def user():
