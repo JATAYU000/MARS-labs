@@ -9,12 +9,17 @@ import tempfile
 import uuid
 import chromadb
 import numpy as np
+import google.generativeai as genai
+from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv 
 
 # RAG imports
 from langchain_core.globals import set_verbose, set_debug
 from langchain_community.vectorstores import Chroma
 from langchain_community.chat_models import ChatOllama
-from langchain_community.embeddings import FastEmbedEmbeddings
+#from langchain_community.embeddings import FastEmbedEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.schema import Document
 from langchain.schema.output_parser import StrOutputParser
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -26,16 +31,26 @@ from langchain_core.prompts import ChatPromptTemplate
 set_debug(True)
 set_verbose(True)
 
+# Load env variables
+load_dotenv()
+
+# Selecting the model
+selected_model = "gemini"
+
 class Mentor:
-    def __init__(self, llm_model="qwen2.5"):
-        self.model = ChatOllama(model=llm_model)
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=512, chunk_overlap=100
-        )
+    def __init__(self, llm_model="qwen2.5", selected_model="ollama"):
+        self.selected_model = selected_model
+        self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=100)
+
+        # Load API Key for Gemini
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+        print(f"Initializing Mentor with model: {selected_model}")
+
         self.prompt = ChatPromptTemplate.from_template(
             """
             You are an experienced and knowledgeable mentor, guiding users by answering their questions strictly based on the provided context. Your responses should be clear, accurate, and helpful while maintaining a friendly and supportive tone.
-            
+
             Instructions:
                 Use only the provided context to answer questions. If the answer is not in the context, say, "I don't have enough information to answer that."
                 Provide structured and detailed explanations when necessary.
@@ -43,80 +58,121 @@ class Mentor:
                 If the question is ambiguous, ask for clarification instead of making assumptions.
 
             Context: {context}
-            
+
             Question: {question}
             """
         )
+
         self.vector_store = None
         self.retriever = None
         self.chain = None
-        self.init_vector_store()
-    
-    def init_vector_store(self):
-        """Initialize the vector store"""
+
+        # ✅ First initialize LLM model
         try:
+            if selected_model == "ollama":
+                print("Using ChatOllama model")
+                self.model = ChatOllama(model=llm_model)
+
+            elif selected_model == "gemini":
+                if not self.gemini_api_key:
+                    raise ValueError("Missing Gemini API key. Please set GEMINI_API_KEY in your .env file.")
+                genai.configure(api_key=self.gemini_api_key)
+                self.model = genai.GenerativeModel("gemini-2.0-flash")  # ✅ Correctly set Gemini model
+                print("Using Gemini model")
+
+            else:
+                raise ValueError(f"Invalid model selected: {selected_model}")
+
+        except Exception as e:
+            print(f"Error initializing LLM: {e}")
+            return
+
+        # ✅ Now call vector store initialization after the model is set
+        self.init_vector_store()
+
+
+    def init_vector_store(self):
+        """Initialize the vector store using LangChain's Chroma"""
+        try:
+            self.embedding_function = HuggingFaceEmbeddings(model_name="intfloat/e5-base")
+
+            # ✅ Use LangChain's Chroma wrapper instead of chromadb.PersistentClient
             self.vector_store = Chroma(
-                persist_directory="chroma_db", 
-                embedding_function=FastEmbedEmbeddings()
+                persist_directory="chroma_db",
+                embedding_function=self.embedding_function
             )
+
+            # ✅ Use `as_retriever()` correctly
             self.retriever = self.vector_store.as_retriever(
-                search_type="similarity_score_threshold",
-                search_kwargs={"k": 10, "score_threshold": 0.0},
+                search_type="similarity",  # Use 'similarity' (not 'similarity_score_threshold')
+                search_kwargs={"k": 10}
             )
-            
-            self.chain = (
-                {"context": self.retriever, "question": RunnablePassthrough()}
-                | self.prompt
-                | self.model
-                | StrOutputParser()
-            )
+
+            # ✅ Fix chain setup
+            if self.selected_model == "gemini":
+                self.chain = (
+                    {"context": self.retriever, "question": RunnablePassthrough()}
+                    | self.prompt
+                    | RunnableLambda(lambda x: self.model.generate_content(x["context"]).text)
+                    | StrOutputParser()
+                )
+            else:
+                self.chain = (
+                    {"context": self.retriever, "question": RunnablePassthrough()}
+                    | self.prompt
+                    | self.model
+                    | StrOutputParser()
+                )
+
         except Exception as e:
             print(f"Error initializing vector store: {e}")
-            # Create empty vector store if none exists
-            self.vector_store = Chroma(
-                collection_name="documents",
-                embedding_function=FastEmbedEmbeddings()
-            )
-            self.vector_store.persist()
-    
+
+
     def ingest(self, file_path):
         """Process and ingest a document into the vector store"""
         try:
             # Load the document
             loader = PyPDFLoader(file_path)
             documents = loader.load()
-            
+
             # Split the documents into chunks
             splits = self.text_splitter.split_documents(documents)
-            
-            # Add documents to vector store
+
             if not self.vector_store:
                 self.init_vector_store()
-                
+
+            # ✅ Correctly add documents
             self.vector_store.add_documents(splits)
             self.vector_store.persist()
-            
+
             return len(splits)
         except Exception as e:
             print(f"Error ingesting document: {e}")
             return 0
 
     def ask(self, query):
-        """Query the knowledge base"""
+        """Query the knowledge base using the selected model"""
         if not self.vector_store:
             return "No documents have been ingested yet. Please upload documents first."
-        
+
         try:
-            # Ensure the chain is initialized
             if not self.chain:
                 self.init_vector_store()
-            
-            # Process the query
-            return self.chain.invoke(query)
+
+            retrieved_docs = self.retriever.invoke(query)
+            context = "\n\n".join([doc.page_content for doc in retrieved_docs])
+
+            if self.selected_model == "ollama":
+                return self.chain.invoke(query)
+
+            elif self.selected_model == "gemini":
+                return self.generate_answer_with_gemini(query, context)
+
+            return "Invalid model selection."
         except Exception as e:
             print(f"Error processing query: {e}")
-            return f"An error occurred while processing your query: {str(e)}"
-    
+            return f"An error occurred: {str(e)}"
+
     def clear(self):
         """Clear the vector store"""
         if self.vector_store:
@@ -125,16 +181,16 @@ class Mentor:
                 self.init_vector_store()
             except Exception as e:
                 print(f"Error clearing vector store: {e}")
-    
+
     def load_embeddings(self, path):
         """Load pre-generated embeddings"""
         try:
             embeddings = np.load(path, allow_pickle=True)
-            # Implementation would depend on how embeddings are structured
             return len(embeddings)
         except Exception as e:
             print(f"Error loading embeddings: {e}")
             return 0
+
 
 
 class ChatbotService:
@@ -203,9 +259,23 @@ class User(db.Model):
         }
 
 
-# Initialize ChromaDB client
-chroma_client = chromadb.PersistentClient(path="chroma_db")
-collection = chroma_client.get_or_create_collection("ncert_docs")
+# # Load Sentence Transformer for embedding queries
+# encoder = SentenceTransformer("intfloat/e5-base")
+
+# # Initialize ChromaDB client
+# chroma_client = chromadb.PersistentClient(path="chroma_db")
+# collection = chroma_client.get_collection("ncert_docs")
+
+# # Configure Gemini API
+# genai.configure(api_key=os.getenv("GEMINI_API_KEY"))  # Replace with your actual API key
+
+# # Initialize ChromaDB client
+# chroma_client = chromadb.PersistentClient(path="chroma_db")
+# collection_name = "ncert_docs"
+
+# Initialize Chroma with the same DB as init_vector_store
+embedding_function = HuggingFaceEmbeddings(model_name="intfloat/e5-base")
+vector_store = Chroma(persist_directory="chroma_db", embedding_function=embedding_function)
 
 
 # Helper functions
@@ -219,38 +289,104 @@ def ensure_session():
     
     session_id = session['session_id']
     if session_id not in chat_instances:
-        chat_instances[session_id] = Mentor()
+        chat_instances[session_id] = Mentor(selected_model=selected_model)
     
     return session_id
 
 
 def process_npy_files(embeddings_path, chunks_path):
-    """Process .npy files and insert into ChromaDB"""
+    """Load embeddings and text chunks, then insert them into LangChain's ChromaDB"""
     try:
-        embeddings = np.load(embeddings_path, allow_pickle=True)
-        chunked_docs = np.load(chunks_path, allow_pickle=True)
+        print(f"Loading embeddings from: {embeddings_path}")
+        print(f"Loading chunks from: {chunks_path}")
 
-        # Insert into ChromaDB
-        for i, (doc, emb) in enumerate(zip(chunked_docs, embeddings)):
-            collection.add(
-                ids=[f"{doc['source']}_chunk_{doc['chunk_id']}"],
-                embeddings=[emb.tolist()],
-                metadatas=[{"source": doc["source"], "chunk_id": doc["chunk_id"]}],
-                documents=[doc["text"]]
+        embeddings = np.load(embeddings_path, allow_pickle=True)
+        chunks = np.load(chunks_path, allow_pickle=True)
+
+        print(f"Loaded {len(embeddings)} embeddings")
+        print(f"Loaded {len(chunks)} chunks")
+
+        if len(embeddings) != len(chunks):
+            print("Error: Mismatch between embeddings and chunks count.")
+            return False
+
+        # Convert chunks into LangChain's Document format
+        documents = [
+            Document(
+                page_content=chunk["text"],  # Extract text
+                metadata={
+                    "source": str(chunk.get("source", "unknown")),
+                    "chunk_id": int(chunk.get("chunk_id", i))  # Ensure integer
+                }
             )
-        
+            for i, chunk in enumerate(chunks)
+        ]
+
+        print("Adding to ChromaDB using LangChain...")
+        vector_store.add_documents(documents)
+
+        print("Successfully stored in ChromaDB!")
         return True
     except Exception as e:
         print(f"Error processing NPY files: {e}")
         return False
-    finally:
-        # Clean up files
-        try:
-            os.remove(embeddings_path)
-            os.remove(chunks_path)
-        except Exception as e:
-            print(f"Error removing temporary files: {e}")
 
+
+def generate_answer_with_gemini(self, query, context):
+    """Generate response using Gemini"""
+    prompt = f"""
+    You are an AI assistant trained on NCERT textbooks. Answer the following question using the retrieved NCERT content.
+
+    Question:
+    {query}
+
+    Retrieved Context:
+    {context}
+
+    Answer:
+    """
+    try:
+        response = self.model.generate_content(prompt)
+        return response.text if response else "Failed to generate response."
+    except Exception as e:
+        print(f"Error generating response with Gemini: {e}")
+        return "An error occurred while generating response."
+
+
+
+
+
+# def retrieve_context(query, top_k=5):
+#     """Retrieve top-k most relevant chunks from ChromaDB."""
+#     query_embedding = encoder.encode(query).tolist()
+#     results = collection.query(
+#         query_embeddings=[query_embedding],
+#         n_results=top_k
+#     )
+
+#     retrieved_docs = results["documents"][0] if "documents" in results else []
+#     return "\n\n".join(retrieved_docs) if retrieved_docs else "No relevant NCERT content found."
+
+
+# def generate_answer_with_gemini(query):
+#     """Generate an answer using Gemini with NCERT context."""
+#     context = retrieve_context(query)
+    
+#     prompt = f"""
+#     You are an AI assistant trained on NCERT textbooks. Answer the following question using the retrieved NCERT content.
+
+#     Question:
+#     {query}
+
+#     Retrieved Context:
+#     {context}
+
+#     Answer:
+#     """
+
+#     model = genai.GenerativeModel("gemini-2.0-flash")
+#     response = model.generate_content(prompt)
+#     return response.text
 
 
 # Routes
@@ -317,24 +453,25 @@ def ask_question():
     """Process user questions"""
     data = request.json
     user_text = data.get('message', '').strip()
-    
+
     if not user_text:
         return jsonify({'error': 'Empty message'}), 400
-    
+
     session_id = ensure_session()
     assistant = chat_instances[session_id]
-    
-    # Process the question
+
     agent_text = assistant.ask(user_text)
-    
+
     # Update session messages
     session['messages'].append({'content': user_text, 'is_user': True})
     session['messages'].append({'content': agent_text, 'is_user': False})
-    
+
     return jsonify({
         'user_message': user_text,
         'response': agent_text
     }), 200
+
+
 
 
 @app.route('/clear', methods=['POST'])

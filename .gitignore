@@ -2,4 +2,4 @@ test/
 venv/
 env/
 __pycache__/
-
+.env
