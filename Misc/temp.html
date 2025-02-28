@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record & Convert Audio to Text</title>
+</head>
+<body>
+
+    <h2>Microphone Audio Recorder & Speech-to-Text</h2>
+    <button id="startRecord">Start Recording</button>
+    <button id="stopRecord" disabled>Stop Recording</button>
+    <audio id="audioPlayback" controls></audio>
+    <a id="downloadLink" style="display: none;">Download Audio</a>
+    <h3>Transcribed Text:</h3>
+    <p id="transcript">Waiting for transcript...</p>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        const startButton = document.getElementById("startRecord");
+        const stopButton = document.getElementById("stopRecord");
+        const audioPlayback = document.getElementById("audioPlayback");
+        const downloadLink = document.getElementById("downloadLink");
+
+        startButton.addEventListener("click", async () => {
+            console.log("Requesting microphone access...");
+
+            let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            console.log("Microphone access granted.");
+            
+            mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+            mediaRecorder.start();
+            audioChunks = [];
+
+            console.log("Recording started...");
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                console.log("Recording stopped.");
+                const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+
+                // ✅ Create temporary file URL
+                const tempUrl = URL.createObjectURL(audioBlob);
+                console.log("Temporary File URL:", tempUrl);
+
+                audioPlayback.src = tempUrl;
+                downloadLink.href = tempUrl;
+                downloadLink.download = "recording.webm";
+                downloadLink.style.display = "block";
+
+                console.log("Uploading audio...");
+                try {
+                    const uploadUrl = await uploadAudio(audioBlob);
+                    console.log("Audio uploaded successfully:", uploadUrl);
+                    transcribeAudio(uploadUrl);
+                } catch (error) {
+                    console.error("Upload failed:", error);
+                    document.getElementById("transcript").innerText = "Upload failed!";
+                }
+            };
+
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        });
+
+        stopButton.addEventListener("click", () => {
+            console.log("Stopping recording...");
+            mediaRecorder.stop();
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        });
+
+        async function uploadAudio(audioBlob) {
+            const API_KEY = "600ae542311c4e9383297b9539656e91";
+
+            let response = await fetch("https://api.assemblyai.com/v2/upload", {
+                method: "POST",
+                headers: { "authorization": API_KEY },
+                body: audioBlob, // AssemblyAI detects file type automatically
+            });
+
+            if (!response.ok) {
+                throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+            }
+
+            let data = await response.json();
+            console.log("Uploaded audio URL:", data.upload_url);
+            return data.upload_url;
+        }
+
+        async function transcribeAudio(audioUrl) {
+            const API_KEY = "600ae542311c4e9383297b9539656e91";
+
+            console.log("Sending audio for transcription:", audioUrl);
+            let response = await fetch("https://api.assemblyai.com/v2/transcript", {
+                method: "POST",
+                headers: {
+                    "authorization": API_KEY,
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({ audio_url: audioUrl })
+            });
+
+            let data = await response.json();
+            console.log("Transcript Request ID:", data.id);
+
+            let transcriptUrl = `https://api.assemblyai.com/v2/transcript/${data.id}`;
+            document.getElementById("transcript").innerText = "Processing...";
+
+            // ✅ Poll for transcript result every 3 seconds
+            while (true) {
+                console.log("Polling for transcript...");
+                let transcriptResponse = await fetch(transcriptUrl, {
+                    headers: { "authorization": API_KEY }
+                });
+
+                let transcriptData = await transcriptResponse.json();
+                console.log("Current status:", transcriptData.status);
+
+                if (transcriptData.status === "completed") {
+                    console.log("Transcription completed:", transcriptData.text);
+                    document.getElementById("transcript").innerText = transcriptData.text;
+                    break;
+                } else if (transcriptData.status === "failed") {
+                    console.log("Transcription failed.");
+                    document.getElementById("transcript").innerText = "Transcription failed.";
+                    break;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 3000));
+            }
+        }
+    </script>
+
+</body>
+</html>
