@@ -61,13 +61,28 @@ def index():
     progress = User_Progress.query.all()
     return render_template('index.html',users=users,progress=progress)
 
+@app.route('/chatbot', methods=['GET'])
+def chatbot():
+    user_input = request.args.get('question')
+    if user_input:
+        response = Chatbot.res(user_input)
+        return jsonify({"answer": response})
+    return jsonify({"error": "No question provided"}), 400
+
+
 @app.route('/users',methods = ['GET'])
 def user():
     user_id = request.args.get('Id')
     if user_id:
         user = User.query.get(user_id)
         if user:
-            
+            return jsonify(user.to_dict())
+        return jsonify({'message' : 'Unable to detect the user!'}), 404
+    
+    user_data = User.query.all()
+    user_list = [user.to_dict() for user in user_data]
+    return jsonify(user_list)
+
     
 
 @app.route('/update', methods = ['POST'])
@@ -75,9 +90,11 @@ def create():
     data = request.get_json()
     if 'id' in data:
         return jsonify({'message' : 'User already registered'}) , 400
-    data = User(first_name = data['first_name'],last_name = data['last_name'])
+    data = User(first_name = data['first_name'],last_name = data['last_name'],age = data['age'])
     db.session.add(data)
     db.session.commit()
+
+    return jsonify({'message' : 'success'})
 
 with app.app_context():
     db.create_all()
