@@ -1,0 +1,58 @@
+from langchain_core.globals import set_verbose, set_debug
+import chromadb
+from langchain_community.chat_models import ChatOllamaw
+from langchain_community.embeddings import FastEmbedEmbeddings
+from langchain.schema.output_parser import StrOutputParser
+from langchain_community.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema.runnable import RunnablePassthrough
+from langchain_community.vectorstores.utils import filter_complex_metadata
+from langchain_core.prompts import ChatPromptTemplate
+
+set_debug(True)
+set_verbose(True)
+
+class ChatMentor: 
+    def __init__(self, llm_model : str = "qwen2.5"):
+        self.model = ChatOllamaw(llm_model = llm_model)
+        self.text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=512, chunk_overlap=100
+        )
+        self.prompt = ChatPromptTemplate(
+            """
+            Prompt:
+
+            You are an experienced and knowledgeable mentor, guiding users by answering their questions strictly based on the provided context. Your responses should be clear, accurate, and helpful while maintaining a friendly and supportive tone.
+            Instructions:
+
+                Use only the provided context to answer questions. If the answer is not in the context, say, "I don’t have enough information to answer that."
+                Provide structured and detailed explanations when necessary.
+                Keep responses concise and relevant, avoiding unnecessary information.
+                If the question is ambiguous, ask for clarification instead of making assumptions.
+
+            Example Format:
+
+            User Question: What is the process for submitting a proposal?
+            Context Provided: "To submit a proposal, visit the online portal, fill out the required form, and upload your document. Proposals are reviewed within two weeks."
+            Response: "To submit a proposal, go to the online portal, complete the form, and upload your document. The review process takes approximately two weeks."
+
+            If No Relevant Context is Available:
+            "I don’t have enough information to answer that. Could you provide more details or check the provided resources?"
+                        """
+        )
+        self.vector_store = None
+        self.retriever = None
+        self.chain = None
+
+#template
+    def store_embeddings(self):
+        print("Storing embeddings")
+    
+#tmeplate
+    def ask(self, query: str):
+        print("Asking question")
+        return "Answering question"
+    
+#template
+    def load_embeddings(self):
+        print("load embeddigs here")

@@ -94,6 +94,8 @@ def create():
     db.session.add(data)
     db.session.commit()
 
+    return jsonify({'message' : 'User created successfully'})
+
 @app.route('api/ask',methods = ['POST'])
 def ask():
     data = request.get_json()
