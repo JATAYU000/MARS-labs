@@ -10,7 +10,6 @@ import uuid
 import chromadb
 import numpy as np
 import google.generativeai as genai
-#from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv 
 
 # RAG imports
@@ -68,10 +67,8 @@ class Mentor:
         self.vector_store = None
         self.retriever = None
         self.chain = None
-        self.Model = None
-        self.init_vector_store()
-
-        # Initialize models
+        
+        # Initialize models BEFORE initializing vector store
         if selected_model == "ollama":
             self.model = ChatOllama(model=llm_model)
         elif selected_model == "gemini":
@@ -79,7 +76,11 @@ class Mentor:
                 raise ValueError("Missing Gemini API key. Please set GEMINI_API_KEY in your .env file.")
             genai.configure(api_key=self.gemini_api_key)
             self.model = genai.GenerativeModel("gemini-2.0-flash")
-
+        else:
+            raise ValueError(f"Unsupported model type: {selected_model}")
+            
+        # Now initialize the vector store after the model is set
+        self.init_vector_store()
 
 
     def init_vector_store(self):
@@ -88,9 +89,9 @@ class Mentor:
             # Load e5-base embeddings
             self.embedding_function = HuggingFaceEmbeddings(model_name="intfloat/e5-base")
 
-            # Load the existing ChromaDB instance (ensure it matches process_npy_files)
+            # Load the existing ChromaDB instance
             self.vector_store = Chroma(
-                persist_directory="chroma_db",  # Ensure same path as used in process_npy_files
+                persist_directory="chroma_db",
                 embedding_function=self.embedding_function
             )
 
@@ -100,13 +101,16 @@ class Mentor:
                 search_kwargs={"k": 10, "score_threshold": 0.0},
             )
 
-            self.chain = (
-                {"context": self.retriever, "question": RunnablePassthrough()}
-                | self.prompt
-                | self.model
-                | StrOutputParser()
-            )
-
+            # Only set up the chain if using Ollama - Gemini will use a separate method
+            if self.selected_model == "ollama" and self.model is not None:
+                self.chain = (
+                    {"context": self.retriever, "question": RunnablePassthrough()}
+                    | self.prompt
+                    | self.model
+                    | StrOutputParser()
+                )
+            # For Gemini, we'll handle it differently in the ask method
+            
             print("Vector store initialized successfully!")
 
         except Exception as e:
@@ -141,19 +145,18 @@ class Mentor:
             return "No documents have been ingested yet. Please upload documents first."
         
         try:
-            if not self.chain:
+            if not self.retriever:
                 self.init_vector_store()
 
             retrieved_docs = self.retriever.invoke(query)
             context = "\n\n".join([doc.page_content for doc in retrieved_docs])
 
-            if self.selected_model == "ollama":
+            if self.selected_model == "ollama" and self.chain is not None:
                 return self.chain.invoke(query)
-
             elif self.selected_model == "gemini":
                 return self.generate_answer_with_gemini(query, context)
-
-            return "Invalid model selection."
+            else:
+                return "Invalid model selection or model not properly initialized."
         except Exception as e:
             print(f"Error processing query: {e}")
             return f"An error occurred: {str(e)}"
@@ -257,21 +260,6 @@ class User(db.Model):
             'age': self.age
         }
 
-
-# # Load Sentence Transformer for embedding queries
-# encoder = SentenceTransformer("intfloat/e5-base")
-
-# # Initialize ChromaDB client
-# chroma_client = chromadb.PersistentClient(path="chroma_db")
-# collection = chroma_client.get_collection("ncert_docs")
-
-# # Configure Gemini API
-# genai.configure(api_key=os.getenv("GEMINI_API_KEY"))  # Replace with your actual API key
-
-# # Initialize ChromaDB client
-# chroma_client = chromadb.PersistentClient(path="chroma_db")
-# collection_name = "ncert_docs"
-
 # Initialize Chroma with the same DB as init_vector_store
 embedding_function = HuggingFaceEmbeddings(model_name="intfloat/e5-base")
 vector_store = Chroma(persist_directory="chroma_db", embedding_function=embedding_function)
@@ -329,42 +317,6 @@ def process_npy_files(embeddings_path, chunks_path):
     except Exception as e:
         print(f"Error processing NPY files: {e}")
         return False
-
-
-
-
-
-# def retrieve_context(query, top_k=5):
-#     """Retrieve top-k most relevant chunks from ChromaDB."""
-#     query_embedding = encoder.encode(query).tolist()
-#     results = collection.query(
-#         query_embeddings=[query_embedding],
-#         n_results=top_k
-#     )
-
-#     retrieved_docs = results["documents"][0] if "documents" in results else []
-#     return "\n\n".join(retrieved_docs) if retrieved_docs else "No relevant NCERT content found."
-
-
-# def generate_answer_with_gemini(query):
-#     """Generate an answer using Gemini with NCERT context."""
-#     context = retrieve_context(query)
-    
-#     prompt = f"""
-#     You are an AI assistant trained on NCERT textbooks. Answer the following question using the retrieved NCERT content.
-
-#     Question:
-#     {query}
-
-#     Retrieved Context:
-#     {context}
-
-#     Answer:
-#     """
-
-#     model = genai.GenerativeModel("gemini-2.0-flash")
-#     response = model.generate_content(prompt)
-#     return response.text
 
 
 # Routes
