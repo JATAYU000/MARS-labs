@@ -71,6 +71,11 @@
             background-color: #970838;
         }
 
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         .error-message {
             color: #e74c3c;
             margin-top: 20px;
@@ -109,7 +114,7 @@
             border-radius: 5px;
             margin-top: 20px;
             text-align: center;
-            height: 240px;
+            height: 140px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -120,7 +125,7 @@
             border-color: #d10448;
         }
 
-        #fileInput {
+        .file-input {
             display: none;
         }
 
@@ -261,27 +266,32 @@
             <h1>Admin Dashboard</h1>
             <div>
                 <div class="upload-container">
-                    <input type="file" id="fileInput" accept="application/pdf" multiple>
-                    <label for="fileInput" class="upload-label">Click to select PDF files</label>
-                    <div class="file-info" id="fileInfo">No files selected</div>
-                    <div class="progress-bar" id="progressBar">
-                        <div class="progress" id="progress"></div>
+                    <input type="file" id="pdfFileInput" class="file-input" accept="application/pdf" multiple>
+                    <label for="pdfFileInput" class="upload-label">Click to select PDF files</label>
+                    <div class="file-info" id="pdfFileInfo">No files selected</div>
+                    <div class="progress-bar" id="pdfProgressBar">
+                        <div class="progress" id="pdfProgress"></div>
                     </div>
                 </div>
-                <button id="uploadBtn" disabled>Upload PDFs</button>
-                <div class="status-message" id="statusMessage"></div>
+                <button id="pdfUploadBtn" disabled>Upload PDFs</button>
+                <div class="status-message" id="pdfStatusMessage"></div>
             </div>
             <div>
                 <div class="upload-container">
-                    <input type="file" id="fileInput" accept="application/pdf" multiple>
-                    <label for="fileInput" class="upload-label">Click to select embedding files</label>
-                    <div class="file-info" id="fileInfo">No files selected</div>
-                    <div class="progress-bar" id="progressBar">
-                        <div class="progress" id="progress"></div>
+                    <input type="file" id="embeddingsFileInput" class="file-input" accept=".npy">
+                    <label for="embeddingsFileInput" class="upload-label">Click to select embeddings file (.npy)</label>
+                    <div class="file-info" id="embeddingsFileInfo">No file selected</div>
+                </div>
+                <div class="upload-container">
+                    <input type="file" id="chunksFileInput" class="file-input" accept=".npy">
+                    <label for="chunksFileInput" class="upload-label">Click to select chunks file (.npy)</label>
+                    <div class="file-info" id="chunksFileInfo">No file selected</div>
+                    <div class="progress-bar" id="embeddingsProgressBar">
+                        <div class="progress" id="embeddingsProgress"></div>
                     </div>
                 </div>
-                <button id="uploadBtn" disabled>Upload Embeddings</button>
-                <div class="status-message" id="statusMessage"></div>
+                <button id="embeddingsUploadBtn" disabled>Upload Embeddings</button>
+                <div class="status-message" id="embeddingsStatusMessage"></div>
             </div>
             
         </div>
@@ -340,11 +350,11 @@
             }
         });
 
-        // File input handling
-        document.getElementById('fileInput').addEventListener('change', function(e) {
+        // PDF File input handling
+        document.getElementById('pdfFileInput').addEventListener('change', function(e) {
             const files = e.target.files;
-            const fileInfo = document.getElementById('fileInfo');
-            const uploadBtn = document.getElementById('uploadBtn');
+            const fileInfo = document.getElementById('pdfFileInfo');
+            const uploadBtn = document.getElementById('pdfUploadBtn');
             
             if (files && files.length > 0) {
                 const validFiles = Array.from(files).filter(file => file.type === 'application/pdf');
@@ -366,12 +376,57 @@
             }
         });
 
+        // Embeddings file input handling
+        document.getElementById('embeddingsFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileInfo = document.getElementById('embeddingsFileInfo');
+            
+            if (file) {
+                if (file.name.endsWith('.npy')) {
+                    fileInfo.textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+                    checkEnableEmbeddingsUpload();
+                } else {
+                    fileInfo.textContent = 'Please select a .npy file';
+                }
+            } else {
+                fileInfo.textContent = 'No file selected';
+            }
+        });
+
+        // Chunks file input handling
+        document.getElementById('chunksFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileInfo = document.getElementById('chunksFileInfo');
+            
+            if (file) {
+                if (file.name.endsWith('.npy')) {
+                    fileInfo.textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+                    checkEnableEmbeddingsUpload();
+                } else {
+                    fileInfo.textContent = 'Please select a .npy file';
+                }
+            } else {
+                fileInfo.textContent = 'No file selected';
+            }
+        });
+
+        // Check if both embedding files are selected to enable upload button
+        function checkEnableEmbeddingsUpload() {
+            const embeddingsFile = document.getElementById('embeddingsFileInput').files[0];
+            const chunksFile = document.getElementById('chunksFileInput').files[0];
+            const uploadBtn = document.getElementById('embeddingsUploadBtn');
+            
+            uploadBtn.disabled = !(embeddingsFile && chunksFile && 
+                                embeddingsFile.name.endsWith('.npy') && 
+                                chunksFile.name.endsWith('.npy'));
+        }
+
         // PDF upload
-        document.getElementById('uploadBtn').addEventListener('click', function() {
-            const files = document.getElementById('fileInput').files;
-            const statusMessage = document.getElementById('statusMessage');
-            const progressBar = document.getElementById('progressBar');
-            const progress = document.getElementById('progress');
+        document.getElementById('pdfUploadBtn').addEventListener('click', function() {
+            const files = document.getElementById('pdfFileInput').files;
+            const statusMessage = document.getElementById('pdfStatusMessage');
+            const progressBar = document.getElementById('pdfProgressBar');
+            const progress = document.getElementById('pdfProgress');
             
             if (!files || files.length === 0) {
                 return;
@@ -414,10 +469,10 @@
                         statusMessage.style.display = 'block';
                         
                         // Reset UI
-                        document.getElementById('uploadBtn').textContent = 'Upload PDFs';
-                        document.getElementById('uploadBtn').disabled = false;
-                        document.getElementById('fileInput').value = '';
-                        document.getElementById('fileInfo').textContent = 'No files selected';
+                        document.getElementById('pdfUploadBtn').textContent = 'Upload PDFs';
+                        document.getElementById('pdfUploadBtn').disabled = false;
+                        document.getElementById('pdfFileInput').value = '';
+                        document.getElementById('pdfFileInfo').textContent = 'No files selected';
                         
                         // Hide progress after a delay
                         setTimeout(() => {
@@ -434,8 +489,8 @@
                     statusMessage.className = 'status-message error';
                     statusMessage.style.display = 'block';
                     
-                    document.getElementById('uploadBtn').textContent = 'Upload PDFs';
-                    document.getElementById('uploadBtn').disabled = false;
+                    document.getElementById('pdfUploadBtn').textContent = 'Upload PDFs';
+                    document.getElementById('pdfUploadBtn').disabled = false;
                     progressBar.style.display = 'none';
                 });
             }
@@ -443,6 +498,91 @@
             // Upload each file
             Array.from(files).forEach((file, index) => {
                 uploadFile(file, index);
+            });
+        });
+
+        // Embeddings upload
+        document.getElementById('embeddingsUploadBtn').addEventListener('click', function() {
+            const embeddingsFile = document.getElementById('embeddingsFileInput').files[0];
+            const chunksFile = document.getElementById('chunksFileInput').files[0];
+            const statusMessage = document.getElementById('embeddingsStatusMessage');
+            const progressBar = document.getElementById('embeddingsProgressBar');
+            const progress = document.getElementById('embeddingsProgress');
+            
+            if (!embeddingsFile || !chunksFile) {
+                return;
+            }
+            
+            // Show loading state
+            this.textContent = 'Uploading...';
+            this.disabled = true;
+            progressBar.style.display = 'block';
+            progress.style.width = '0%';
+            
+            // Create form data with both files
+            const formData = new FormData();
+            formData.append('embeddings', embeddingsFile);
+            formData.append('chunks', chunksFile);
+            
+            // Upload to backend
+            fetch('/upload_npy', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                progress.style.width = '50%';
+                return response.json();
+            })
+            .then(data => {
+                progress.style.width = '100%';
+                
+                if (data.message) {
+                    // Success
+                    statusMessage.textContent = data.message;
+                    statusMessage.className = 'status-message success';
+                    
+                    // Add to activity log
+                    addActivity(`Embeddings and chunks uploaded successfully`, new Date());
+                } else if (data.error) {
+                    // Error from server
+                    statusMessage.textContent = data.error;
+                    statusMessage.className = 'status-message error';
+                    
+                    // Add to activity log
+                    addActivity(`Error uploading embeddings: ${data.error}`, new Date());
+                }
+                
+                statusMessage.style.display = 'block';
+                
+                // Reset UI
+                document.getElementById('embeddingsUploadBtn').textContent = 'Upload Embeddings';
+                document.getElementById('embeddingsUploadBtn').disabled = true;
+                document.getElementById('embeddingsFileInput').value = '';
+                document.getElementById('chunksFileInput').value = '';
+                document.getElementById('embeddingsFileInfo').textContent = 'No file selected';
+                document.getElementById('chunksFileInfo').textContent = 'No file selected';
+                
+                // Hide progress after a delay
+                setTimeout(() => {
+                    progressBar.style.display = 'none';
+                }, 1000);
+                
+                // Update stats
+                updateStats();
+            })
+            .catch(error => {
+                console.error('Error uploading embeddings:', error);
+                
+                statusMessage.textContent = `Error uploading embeddings: ${error.message}`;
+                statusMessage.className = 'status-message error';
+                statusMessage.style.display = 'block';
+                
+                document.getElementById('embeddingsUploadBtn').textContent = 'Upload Embeddings';
+                document.getElementById('embeddingsUploadBtn').disabled = true;
+                progressBar.style.display = 'none';
+                
+                // Add to activity log
+                addActivity(`Error uploading embeddings: ${error.message}`, new Date());
             });
         });
 
@@ -458,7 +598,7 @@
                         addActivity('Database cleared', new Date());
                         updateStats();
                         
-                        const statusMessage = document.getElementById('statusMessage');
+                        const statusMessage = document.getElementById('pdfStatusMessage');
                         statusMessage.textContent = 'Database cleared successfully!';
                         statusMessage.className = 'status-message success';
                         statusMessage.style.display = 'block';
