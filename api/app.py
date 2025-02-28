@@ -40,13 +40,14 @@ selected_model = "gemini"
 class Mentor:
     def __init__(self, llm_model="qwen2.5", selected_model="ollama"):
         self.selected_model = selected_model
-        self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=100)
+        self.text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=512, chunk_overlap=100
+        )
 
-        # Load API Key for Gemini
+        # Load API Key
         self.gemini_api_key = os.getenv("GEMINI_API_KEY")
 
-        print(f"Initializing Mentor with model: {selected_model}")
-
+        # Prompt template for answering questions
         self.prompt = ChatPromptTemplate.from_template(
             """
             You are an experienced and knowledgeable mentor, guiding users by answering their questions strictly based on the provided context. Your responses should be clear, accurate, and helpful while maintaining a friendly and supportive tone.
@@ -66,67 +67,47 @@ class Mentor:
         self.vector_store = None
         self.retriever = None
         self.chain = None
-
-        # ✅ First initialize LLM model
-        try:
-            if selected_model == "ollama":
-                print("Using ChatOllama model")
-                self.model = ChatOllama(model=llm_model)
-
-            elif selected_model == "gemini":
-                if not self.gemini_api_key:
-                    raise ValueError("Missing Gemini API key. Please set GEMINI_API_KEY in your .env file.")
-                genai.configure(api_key=self.gemini_api_key)
-                self.model = genai.GenerativeModel("gemini-2.0-flash")  # ✅ Correctly set Gemini model
-                print("Using Gemini model")
-
-            else:
-                raise ValueError(f"Invalid model selected: {selected_model}")
-
-        except Exception as e:
-            print(f"Error initializing LLM: {e}")
-            return
-
-        # ✅ Now call vector store initialization after the model is set
         self.init_vector_store()
+
+        # Initialize models
+        if selected_model == "ollama":
+            self.model = ChatOllama(model=llm_model)
+        elif selected_model == "gemini":
+            if not self.gemini_api_key:
+                raise ValueError("Missing Gemini API key. Please set GEMINI_API_KEY in your .env file.")
+            genai.configure(api_key=self.gemini_api_key)
+            self.model = genai.GenerativeModel("gemini-2.0-flash")
+
 
 
     def init_vector_store(self):
-        """Initialize the vector store using LangChain's Chroma"""
+        """Initialize the vector store with e5-base embeddings"""
         try:
+            # Load e5-base embeddings
             self.embedding_function = HuggingFaceEmbeddings(model_name="intfloat/e5-base")
 
-            # ✅ Use LangChain's Chroma wrapper instead of chromadb.PersistentClient
             self.vector_store = Chroma(
                 persist_directory="chroma_db",
                 embedding_function=self.embedding_function
             )
-
-            # ✅ Use `as_retriever()` correctly
             self.retriever = self.vector_store.as_retriever(
-                search_type="similarity",  # Use 'similarity' (not 'similarity_score_threshold')
-                search_kwargs={"k": 10}
+                search_type="similarity_score_threshold",
+                search_kwargs={"k": 10, "score_threshold": 0.0},
             )
 
-            # ✅ Fix chain setup
-            if self.selected_model == "gemini":
-                self.chain = (
-                    {"context": self.retriever, "question": RunnablePassthrough()}
-                    | self.prompt
-                    | RunnableLambda(lambda x: self.model.generate_content(x["context"]).text)
-                    | StrOutputParser()
-                )
-            else:
-                self.chain = (
-                    {"context": self.retriever, "question": RunnablePassthrough()}
-                    | self.prompt
-                    | self.model
-                    | StrOutputParser()
-                )
-
+            self.chain = (
+                {"context": self.retriever, "question": RunnablePassthrough()}
+                | self.prompt
+                | self.model
+                | StrOutputParser()
+            )
         except Exception as e:
             print(f"Error initializing vector store: {e}")
-
+            self.vector_store = Chroma(
+                collection_name="documents",
+                embedding_function=self.embedding_function
+            )
+            self.vector_store.persist()
 
     def ingest(self, file_path):
         """Process and ingest a document into the vector store"""
@@ -134,17 +115,17 @@ class Mentor:
             # Load the document
             loader = PyPDFLoader(file_path)
             documents = loader.load()
-
+            
             # Split the documents into chunks
             splits = self.text_splitter.split_documents(documents)
-
+            
+            # Add documents to vector store
             if not self.vector_store:
                 self.init_vector_store()
-
-            # ✅ Correctly add documents
+                
             self.vector_store.add_documents(splits)
             self.vector_store.persist()
-
+            
             return len(splits)
         except Exception as e:
             print(f"Error ingesting document: {e}")
@@ -154,7 +135,7 @@ class Mentor:
         """Query the knowledge base using the selected model"""
         if not self.vector_store:
             return "No documents have been ingested yet. Please upload documents first."
-
+        
         try:
             if not self.chain:
                 self.init_vector_store()
@@ -172,6 +153,20 @@ class Mentor:
         except Exception as e:
             print(f"Error processing query: {e}")
             return f"An error occurred: {str(e)}"
+
+    def generate_answer_with_gemini(self, query, context):
+        """Generate an answer using Gemini with NCERT context."""
+        prompt = f"""
+        Use the retrieved NCERT content to answer the question.
+
+        Question: {query}
+
+        Retrieved Context:
+        {context}
+        """
+
+        response = self.model.generate_content(prompt)
+        return response.text
 
     def clear(self):
         """Clear the vector store"""
@@ -332,27 +327,6 @@ def process_npy_files(embeddings_path, chunks_path):
         return False
 
 
-def generate_answer_with_gemini(self, query, context):
-    """Generate response using Gemini"""
-    prompt = f"""
-    You are an AI assistant trained on NCERT textbooks. Answer the following question using the retrieved NCERT content.
-
-    Question:
-    {query}
-
-    Retrieved Context:
-    {context}
-
-    Answer:
-    """
-    try:
-        response = self.model.generate_content(prompt)
-        return response.text if response else "Failed to generate response."
-    except Exception as e:
-        print(f"Error generating response with Gemini: {e}")
-        return "An error occurred while generating response."
-
-
 
 
 
@@ -401,13 +375,6 @@ def index():
 def admin_view():
     return render_template('admin_page.html')
 
-@app.route('/progress', methods=['GET'])
-def progress():
-    return render_template('progress_page.html')
-
-@app.route('/chat', methods=['GET'])
-def chat():
-    return render_template('chat.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
