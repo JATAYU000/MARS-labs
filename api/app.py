@@ -252,12 +252,18 @@ def process_npy_files(embeddings_path, chunks_path):
             print(f"Error removing temporary files: {e}")
 
 
+
 # Routes
 @app.route('/')
 def index():
     """Render the main application page"""
     session_id = ensure_session()
     return render_template('index.html')
+
+
+app.route('admin')
+def admin_view():
+    return render_template('admin_page.html')
 
 
 @app.route('/upload', methods=['POST'])
