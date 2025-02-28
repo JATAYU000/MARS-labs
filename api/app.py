@@ -35,7 +35,8 @@ set_verbose(True)
 load_dotenv()
 
 # Selecting the model
-selected_model = "gemini"
+selected_model = "ollama"
+
 
 class Mentor:
     def __init__(self, llm_model="qwen2.5", selected_model="ollama"):
@@ -67,7 +68,7 @@ class Mentor:
         self.vector_store = None
         self.retriever = None
         self.chain = None
-        self.model = None
+        self.Model = None
         self.init_vector_store()
 
         # Initialize models
@@ -82,15 +83,18 @@ class Mentor:
 
 
     def init_vector_store(self):
-        """Initialize the vector store with e5-base embeddings"""
+        """Initialize the vector store with e5-base embeddings using the existing database"""
         try:
             # Load e5-base embeddings
             self.embedding_function = HuggingFaceEmbeddings(model_name="intfloat/e5-base")
 
+            # Load the existing ChromaDB instance (ensure it matches process_npy_files)
             self.vector_store = Chroma(
-                persist_directory="chroma_db",
+                persist_directory="chroma_db",  # Ensure same path as used in process_npy_files
                 embedding_function=self.embedding_function
             )
+
+            # Ensure the retriever uses the stored data
             self.retriever = self.vector_store.as_retriever(
                 search_type="similarity_score_threshold",
                 search_kwargs={"k": 10, "score_threshold": 0.0},
@@ -102,13 +106,12 @@ class Mentor:
                 | self.model
                 | StrOutputParser()
             )
+
+            print("Vector store initialized successfully!")
+
         except Exception as e:
             print(f"Error initializing vector store: {e}")
-            self.vector_store = Chroma(
-                collection_name="documents",
-                embedding_function=self.embedding_function
-            )
-            self.vector_store.persist()
+
 
     def ingest(self, file_path):
         """Process and ingest a document into the vector store"""
