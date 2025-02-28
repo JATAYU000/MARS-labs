@@ -171,6 +171,158 @@
 			</div>
 		</div>
 	</div>
+    <!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website with Drawer</title>
+  <style>
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      right: -450px;
+      width: 450px;
+      height: 100%;
+      background-color: #f1f1f1;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      transition: right 0.3s ease-in-out;
+      z-index: 9999;
+      overflow-y: auto;
+    }
+    
+    .side-drawer.open {
+      right: 0;
+    }
+    
+    .drawer-content {
+      padding: 20px;
+    }
+    
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .drawer-toggle {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      z-index: 10000;
+      width: 50px;
+      height: 50px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .drawer-toggle:hover {
+      background-color: #3e8e41;
+      transform: scale(1.05);
+    }
+    
+    .drawer-toggle.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .drawer-toggle i {
+      font-size: 24px;
+    }
+    
+    .close-drawer {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  
+  </style>
+</head>
+<body>
+
+  <!-- Drawer Button with Icon -->
+  <button class="drawer-toggle" id="drawerToggle">
+    <i class="fas fa-bars"></i>
+  </button>
+  
+  <!-- Right Side Drawer -->
+  <div class="side-drawer" id="sideDrawer">
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <h2>Martian Prodogy</h2>
+        <button class="close-drawer" id="closeDrawer">×</button>
+      </div>
+      <div>
+        <iframe src="chat.html" width="440px" height="100%"></iframe>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const drawerToggle = document.getElementById('drawerToggle');
+      const closeDrawer = document.getElementById('closeDrawer');
+      const sideDrawer = document.getElementById('sideDrawer');
+      
+      // Make sure button is always visible on page load/reload
+      drawerToggle.classList.remove('hidden');
+      sideDrawer.classList.remove('open');
+      
+      // Toggle drawer when button is clicked
+      drawerToggle.addEventListener('click', function() {
+        sideDrawer.classList.toggle('open');
+        
+        // Hide button when drawer opens
+        if (sideDrawer.classList.contains('open')) {
+          drawerToggle.classList.add('hidden');
+        } else {
+          drawerToggle.classList.remove('hidden');
+        }
+      });
+      
+      // Close drawer when close button is clicked
+      closeDrawer.addEventListener('click', function() {
+        sideDrawer.classList.remove('open');
+        drawerToggle.classList.remove('hidden');
+      });
+      
+      // Close drawer when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!sideDrawer.contains(event.target) && event.target !== drawerToggle) {
+          sideDrawer.classList.remove('open');
+          drawerToggle.classList.remove('hidden');
+        }
+      });
+      
+      // Reset drawer state when page is about to unload (browser close or refresh)
+      window.addEventListener('beforeunload', function() {
+        // Force reset drawer state
+        localStorage.setItem('drawerReset', 'true');
+      });
+    });
+    
+    // Existing function referenced in your code (keeping it to prevent errors)
+    function showLanguage() {
+      // If this function exists in your original code, it will be preserved
+      // If not, this is a placeholder
+      const langPopup = document.getElementById('langPopup');
+      if (langPopup) {
+        langPopup.style.display = langPopup.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+  </script>
     
 <style type="text/css">
     a.formLink,
