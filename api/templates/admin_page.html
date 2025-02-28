@@ -220,6 +220,23 @@
         .control-btn {
             margin-bottom: 10px;
         }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #d10448;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -243,11 +260,14 @@
         <div class="upload-section">
             <h1>Admin Dashboard</h1>
             <div class="upload-container">
-                <input type="file" id="fileInput" accept="application/pdf">
-                <label for="fileInput" class="upload-label">Click to select PDF file</label>
-                <div class="file-info" id="fileInfo">No file selected</div>
+                <input type="file" id="fileInput" accept="application/pdf" multiple>
+                <label for="fileInput" class="upload-label">Click to select PDF files</label>
+                <div class="file-info" id="fileInfo">No files selected</div>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress" id="progress"></div>
+                </div>
             </div>
-            <button id="uploadBtn" disabled>Upload PDF</button>
+            <button id="uploadBtn" disabled>Upload PDFs</button>
             <div class="status-message" id="statusMessage"></div>
         </div>
         
@@ -258,11 +278,11 @@
                 <h3>Statistics</h3>
                 <div class="stats-box">
                     <div class="stat-item">
-                        <div class="stat-number">42</div>
+                        <div class="stat-number" id="fileCount">0</div>
                         <div class="stat-label">Files</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">18</div>
+                        <div class="stat-number" id="userCount">0</div>
                         <div class="stat-label">Users</div>
                     </div>
                 </div>
@@ -270,25 +290,17 @@
             
             <div class="panel-section">
                 <h3>Recent Activity</h3>
-                <div class="recent-activity">
+                <div class="recent-activity" id="activityList">
                     <div class="activity-item">
-                        <div>Report.pdf uploaded</div>
-                        <div class="activity-time">Today, 10:45 AM</div>
-                    </div>
-                    <div class="activity-item">
-                        <div>User John logged in</div>
-                        <div class="activity-time">Today, 09:30 AM</div>
-                    </div>
-                    <div class="activity-item">
-                        <div>System backup completed</div>
-                        <div class="activity-time">Yesterday, 11:15 PM</div>
+                        <div>System initialized</div>
+                        <div class="activity-time">Just now</div>
                     </div>
                 </div>
             </div>
             
             <div class="control-buttons">
-                <button class="control-btn">Ground Model</button>
-                <button class="control-btn">Random Btn</button>
+                <button class="control-btn" id="clearBtn">Clear Database</button>
+                <button class="control-btn" id="refreshBtn">Refresh Stats</button>
                 <button class="logout-btn" id="logoutBtn">Logout</button>
             </div>
         </div>
@@ -305,6 +317,9 @@
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('dashboardPage').style.display = 'flex';
                 document.getElementById('errorMessage').style.display = 'none';
+                
+                // Load initial stats
+                updateStats();
             } else {
                 document.getElementById('errorMessage').style.display = 'block';
             }
@@ -312,90 +327,138 @@
 
         // File input handling
         document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
+            const files = e.target.files;
             const fileInfo = document.getElementById('fileInfo');
             const uploadBtn = document.getElementById('uploadBtn');
             
-            if (file) {
-                if (file.type === 'application/pdf') {
-                    fileInfo.textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+            if (files && files.length > 0) {
+                const validFiles = Array.from(files).filter(file => file.type === 'application/pdf');
+                
+                if (validFiles.length === files.length) {
+                    if (files.length === 1) {
+                        fileInfo.textContent = `Selected: ${files[0].name} (${Math.round(files[0].size / 1024)} KB)`;
+                    } else {
+                        fileInfo.textContent = `Selected ${files.length} PDF files`;
+                    }
                     uploadBtn.disabled = false;
                 } else {
-                    fileInfo.textContent = 'Please select a PDF file';
+                    fileInfo.textContent = 'Please select only PDF files';
                     uploadBtn.disabled = true;
                 }
             } else {
-                fileInfo.textContent = 'No file selected';
+                fileInfo.textContent = 'No files selected';
                 uploadBtn.disabled = true;
             }
         });
 
         // PDF upload
         document.getElementById('uploadBtn').addEventListener('click', function() {
-            const file = document.getElementById('fileInput').files[0];
+            const files = document.getElementById('fileInput').files;
             const statusMessage = document.getElementById('statusMessage');
+            const progressBar = document.getElementById('progressBar');
+            const progress = document.getElementById('progress');
             
-            if (!file) {
+            if (!files || files.length === 0) {
                 return;
             }
-            
-            // Create FormData object
-            const formData = new FormData();
-            formData.append('pdfFile', file);
             
             // Show loading state
             this.textContent = 'Uploading...';
             this.disabled = true;
+            progressBar.style.display = 'block';
+            progress.style.width = '0%';
             
-            // Example API endpoint - replace with your actual endpoint
-            const apiUrl = 'https://your-backend-api.com/upload-pdf';
+            // Process each file
+            let uploadedCount = 0;
+            const totalFiles = files.length;
             
-            // Here we simulate the API call
-            setTimeout(() => {
-                // Simulating successful upload
-                statusMessage.textContent = 'PDF uploaded successfully!';
-                statusMessage.className = 'status-message success';
-                statusMessage.style.display = 'block';
+            // Function to upload a single file
+            function uploadFile(file, index) {
+                const formData = new FormData();
+                formData.append('file', file);
                 
-                // Reset button
-                document.getElementById('uploadBtn').textContent = 'Upload PDF';
-                document.getElementById('uploadBtn').disabled = false;
-                
-                // Reset file input
-                document.getElementById('fileInput').value = '';
-                document.getElementById('fileInfo').textContent = 'No file selected';
-                document.getElementById('uploadBtn').disabled = true;
-                
-                // Update recent activity (for demonstration)
-                const activityList = document.querySelector('.recent-activity');
-                const newActivity = document.createElement('div');
-                newActivity.className = 'activity-item';
-                
-                const activityText = document.createElement('div');
-                activityText.textContent = file.name + ' uploaded';
-                
-                const activityTime = document.createElement('div');
-                activityTime.className = 'activity-time';
-                
-                const now = new Date();
-                const timeString = 'Today, ' + now.getHours().toString().padStart(2, '0') + ':' + 
-                                  now.getMinutes().toString().padStart(2, '0') + ' ' + 
-                                  (now.getHours() >= 12 ? 'PM' : 'AM');
-                activityTime.textContent = timeString;
-                
-                newActivity.appendChild(activityText);
-                newActivity.appendChild(activityTime);
-                
-                activityList.insertBefore(newActivity, activityList.firstChild);
-            }, 1500);
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    uploadedCount++;
+                    
+                    // Add to activity log
+                    addActivity(`${file.name} uploaded`, new Date());
+                    
+                    // Update progress
+                    const progressPercent = (uploadedCount / totalFiles) * 100;
+                    progress.style.width = `${progressPercent}%`;
+                    
+                    // If all files uploaded
+                    if (uploadedCount === totalFiles) {
+                        statusMessage.textContent = `${totalFiles} PDF file(s) uploaded successfully!`;
+                        statusMessage.className = 'status-message success';
+                        statusMessage.style.display = 'block';
+                        
+                        // Reset UI
+                        document.getElementById('uploadBtn').textContent = 'Upload PDFs';
+                        document.getElementById('uploadBtn').disabled = false;
+                        document.getElementById('fileInput').value = '';
+                        document.getElementById('fileInfo').textContent = 'No files selected';
+                        
+                        // Hide progress after a delay
+                        setTimeout(() => {
+                            progressBar.style.display = 'none';
+                        }, 1000);
+                        
+                        // Update stats
+                        updateStats();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading file:', error);
+                    statusMessage.textContent = `Error uploading ${file.name}: ${error.message}`;
+                    statusMessage.className = 'status-message error';
+                    statusMessage.style.display = 'block';
+                    
+                    document.getElementById('uploadBtn').textContent = 'Upload PDFs';
+                    document.getElementById('uploadBtn').disabled = false;
+                    progressBar.style.display = 'none';
+                });
+            }
+            
+            // Upload each file
+            Array.from(files).forEach((file, index) => {
+                uploadFile(file, index);
+            });
         });
 
-        // Control panel buttons
-        const controlButtons = document.querySelectorAll('.control-btn');
-        controlButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                alert('This feature is not implemented in this demo.');
-            });
+        // Clear database
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear the database? This will remove all ingested documents.')) {
+                fetch('/clear', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        addActivity('Database cleared', new Date());
+                        updateStats();
+                        
+                        const statusMessage = document.getElementById('statusMessage');
+                        statusMessage.textContent = 'Database cleared successfully!';
+                        statusMessage.className = 'status-message success';
+                        statusMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error clearing database:', error);
+                });
+            }
+        });
+
+        // Refresh stats
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            updateStats();
+            addActivity('Stats refreshed', new Date());
         });
 
         // Logout functionality
@@ -405,6 +468,78 @@
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         });
+
+        // Helper function to add activity
+        function addActivity(text, time) {
+            const activityList = document.getElementById('activityList');
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            
+            const activityText = document.createElement('div');
+            activityText.textContent = text;
+            
+            const activityTime = document.createElement('div');
+            activityTime.className = 'activity-time';
+            
+            const timeString = formatTime(time);
+            activityTime.textContent = timeString;
+            
+            newActivity.appendChild(activityText);
+            newActivity.appendChild(activityTime);
+            
+            activityList.insertBefore(newActivity, activityList.firstChild);
+            
+            // Limit activity items to 10
+            if (activityList.children.length > 10) {
+                activityList.removeChild(activityList.lastChild);
+            }
+        }
+
+        // Helper function to format time
+        function formatTime(date) {
+            const now = new Date();
+            const isToday = date.getDate() === now.getDate() && 
+                           date.getMonth() === now.getMonth() && 
+                           date.getFullYear() === now.getFullYear();
+            
+            const hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+            
+            if (isToday) {
+                return `Today, ${formattedHours}:${minutes} ${ampm}`;
+            } else {
+                return `${date.toLocaleDateString()}, ${formattedHours}:${minutes} ${ampm}`;
+            }
+        }
+
+        // Function to update stats
+        function updateStats() {
+            // This would typically fetch stats from your backend
+            // For demonstration, we'll simulate it
+            // In a real implementation, you would make an API call to get this data
+            
+            // Get user count
+            fetch('/users')
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        document.getElementById('userCount').textContent = data.length;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching users:', error);
+                });
+            
+            // For file count, we don't have a direct endpoint in your provided code
+            // You would need to create an endpoint to return document count
+            // For now, we'll set a placeholder value
+            document.getElementById('fileCount').textContent = "?";
+            
+            // Add refresh activity
+            addActivity('Dashboard loaded', new Date());
+        }
     </script>
 </body>
 </html>

@@ -261,7 +261,7 @@ def index():
     return render_template('index.html')
 
 
-app.route('admin')
+@app.route('/admin', methods=['GET'])
 def admin_view():
     return render_template('admin_page.html')
 
