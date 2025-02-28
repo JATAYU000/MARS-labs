@@ -8,6 +8,8 @@ import time
 import tempfile
 import uuid
 from rag import Mentor
+import chromadb
+import numpy as np
 
 app = Flask(__name__)
 
@@ -20,8 +22,10 @@ app.secret_key = "your_secret_key_here"
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 chat_instances = {}
 
@@ -196,6 +200,56 @@ def chatbot():
     data = request.get_json()
     response = Chatbot.res(data['question'])
     return jsonify({'answer': response})
+
+chroma_client = chromadb.PersistentClient(path="chroma_db")
+collection = chroma_client.get_or_create_collection("ncert_docs")
+
+def process_npy_files(embeddings_path, chunks_path):
+    """Loads .npy files, inserts embeddings into ChromaDB, and deletes files after processing."""
+    try:
+        embeddings = np.load(embeddings_path, allow_pickle=True)
+        chunked_docs = np.load(chunks_path, allow_pickle=True)
+
+        # Insert into ChromaDB
+        for i, (doc, emb) in enumerate(zip(chunked_docs, embeddings)):
+            collection.add(
+                ids=[f"{doc['source']}_chunk_{doc['chunk_id']}"],
+                embeddings=[emb.tolist()],  # Convert numpy array to list
+                metadatas=[{"source": doc["source"], "chunk_id": doc["chunk_id"]}],
+                documents=[doc["text"]]
+            )
+
+    finally:
+        # Delete the files after processing
+        os.remove(embeddings_path)
+        os.remove(chunks_path)
+
+
+@app.route("/upload_npy", methods=["POST"])
+def upload_npy():
+    """Handles file uploads and processes them into ChromaDB."""
+    if "embeddings" not in request.files or "chunks" not in request.files:
+        return jsonify({"error": "Both 'embeddings' and 'chunks' files are required"}), 400
+
+    embeddings_file = request.files["embeddings"]
+    chunks_file = request.files["chunks"]
+
+    # Secure filenames
+    embeddings_filename = secure_filename(embeddings_file.filename)
+    chunks_filename = secure_filename(chunks_file.filename)
+
+    # Save uploaded files
+    embeddings_path = os.path.join(app.config["UPLOAD_FOLDER"], embeddings_filename)
+    chunks_path = os.path.join(app.config["UPLOAD_FOLDER"], chunks_filename)
+
+    embeddings_file.save(embeddings_path)
+    chunks_file.save(chunks_path)
+
+    # Process and insert into ChromaDB
+    process_npy_files(embeddings_path, chunks_path)
+
+    return jsonify({"message": "Files uploaded and processed successfully"}), 200
+
 
 with app.app_context():
     db.create_all()
