@@ -1,0 +1,2759 @@
+{
+    "106": {
+        "name": "Social Science - History",
+        "branches": {
+            "84": {
+                "name": "Class 8",
+                "simulations": {
+                    "585": {
+                        "name": "India after Independance",
+                        "count": "1"
+                    }
+                }
+            },
+            "149": {
+                "name": "Class 6",
+                "simulations": {
+                    "790": {
+                        "name": "The Pyramid (AR)",
+                        "count": "1"
+                    }
+                }
+            },
+            "81": {
+                "name": "Class 7",
+                "simulations": {
+                    "525": {
+                        "name": "The rulers of Delhi",
+                        "count": "1"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Social Science - History",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "97": {
+        "name": "Computer Science",
+        "branches": {
+            "48": {
+                "name": "Class 12",
+                "simulations": {
+                    "589": {
+                        "name": "Defining Setters- Assigning Values to Attributes",
+                        "count": "1"
+                    },
+                    "606": {
+                        "name": "Extending Interface to an Interface",
+                        "count": "1"
+                    },
+                    "510": {
+                        "name": "Write a recursive code to find the sum of all elements of a list",
+                        "count": "1"
+                    },
+                    "605": {
+                        "name": "Extend the functionality",
+                        "count": "1"
+                    },
+                    "613": {
+                        "name": "To Find the Origin of a Point using a Function in Java",
+                        "count": "1"
+                    },
+                    "496": {
+                        "name": "Prints your Name and Birthday as Separate Strings",
+                        "count": "1"
+                    },
+                    "487": {
+                        "name": "Recursive Max",
+                        "count": "1"
+                    },
+                    "452": {
+                        "name": "Compound Interest",
+                        "count": "1"
+                    },
+                    "607": {
+                        "name": "Implementing an Interface",
+                        "count": "1"
+                    },
+                    "463": {
+                        "name": "GCD Euclidean Algorithm",
+                        "count": "1"
+                    },
+                    "497": {
+                        "name": "To show the use of all six math functions",
+                        "count": "1"
+                    },
+                    "495": {
+                        "name": "Finding min-max Recursive",
+                        "count": "1"
+                    },
+                    "501": {
+                        "name": "Recursive Search",
+                        "count": "1"
+                    },
+                    "595": {
+                        "name": "Defining Constructors and Initializing Attributes using the Parameterized Constructor",
+                        "count": "1"
+                    },
+                    "587": {
+                        "name": "Defining a Class",
+                        "count": "1"
+                    },
+                    "465": {
+                        "name": "Merge Sort",
+                        "count": "1"
+                    },
+                    "498": {
+                        "name": "Binary Search using Unsorted Array",
+                        "count": "1"
+                    },
+                    "456": {
+                        "name": "GCD Subtraction Method",
+                        "count": "1"
+                    },
+                    "609": {
+                        "name": "Projection of a Point on X-axis and Y-axis",
+                        "count": "1"
+                    },
+                    "614": {
+                        "name": "Which Quadrant does the Point belong to",
+                        "count": "1"
+                    },
+                    "522": {
+                        "name": "Find the Third Largest Number in a List",
+                        "count": "1"
+                    },
+                    "457": {
+                        "name": "Insertion Sort",
+                        "count": "1"
+                    },
+                    "508": {
+                        "name": "sin(x, n) to calculate the value of sin(x) using its Taylor series expansion",
+                        "count": "1"
+                    },
+                    "493": {
+                        "name": "Recursive Fibonacci Series (Using String)",
+                        "count": "1"
+                    },
+                    "448": {
+                        "name": "Factorial Correct",
+                        "count": "1"
+                    },
+                    "588": {
+                        "name": "Defining Getters - Reading Values of Attributes",
+                        "count": "1"
+                    },
+                    "449": {
+                        "name": "Factorial Loop Init Error",
+                        "count": "1"
+                    },
+                    "492": {
+                        "name": "Recursive Palindrome (String)",
+                        "count": "1"
+                    },
+                    "464": {
+                        "name": "Factorial Loop Body Error",
+                        "count": "1"
+                    },
+                    "455": {
+                        "name": "Fibonacci (String)",
+                        "count": "1"
+                    },
+                    "524": {
+                        "name": "Check if a number is equal to the sum of cubes of its digits. Find the smallest & largest numbers",
+                        "count": "1"
+                    },
+                    "494": {
+                        "name": "Merge Sort",
+                        "count": "1"
+                    },
+                    "453": {
+                        "name": "Selection Sort",
+                        "count": "1"
+                    },
+                    "451": {
+                        "name": "Simple Interest",
+                        "count": "1"
+                    },
+                    "919": {
+                        "name": "Write a program to plot the function y = x\u00b2 using the pyplot or matplotlib libraries",
+                        "count": "1"
+                    },
+                    "604": {
+                        "name": "Defining Constructors and Initializing Attributes using the Default Constructor",
+                        "count": "1"
+                    },
+                    "458": {
+                        "name": "Factorial Initialization Error",
+                        "count": "1"
+                    },
+                    "509": {
+                        "name": "Recursive Code to Find the Sum of all Elements of a List(Using Linear method)",
+                        "count": "1"
+                    },
+                    "450": {
+                        "name": "Fibonacci (Number)",
+                        "count": "1"
+                    },
+                    "488": {
+                        "name": "Factorial Missing Incrementation",
+                        "count": "1"
+                    },
+                    "534": {
+                        "name": "Take a sample of phishing e-mails and find the most common words",
+                        "count": "1"
+                    },
+                    "459": {
+                        "name": "Factorial Loop Condition Error",
+                        "count": "1"
+                    },
+                    "590": {
+                        "name": "Defining Printers Printing the Output",
+                        "count": "1"
+                    },
+                    "461": {
+                        "name": "Bubble Sort",
+                        "count": "1"
+                    },
+                    "491": {
+                        "name": "Recursive Fibonacci Series (Using Number)",
+                        "count": "1"
+                    },
+                    "923": {
+                        "name": "Write a program to implement a stack using a list data-structure",
+                        "count": "1"
+                    },
+                    "532": {
+                        "name": "Compute EMIs for a loan using the NumPy library",
+                        "count": "1"
+                    },
+                    "489": {
+                        "name": "Binary Search Sorted Array",
+                        "count": "1"
+                    },
+                    "462": {
+                        "name": "Quick Sort",
+                        "count": "1"
+                    },
+                    "926": {
+                        "name": "Write a program to implement a Queue using a list data-structure",
+                        "count": "1"
+                    },
+                    "502": {
+                        "name": "Recursive Max (Linear Method)",
+                        "count": "1"
+                    },
+                    "659": {
+                        "name": "Remove all the lines that contain the character 'a' in a file and write it to another file",
+                        "count": "1"
+                    },
+                    "511": {
+                        "name": "Generates random numbers between 1 and 6 (simulates a dice)",
+                        "count": "1"
+                    },
+                    "616": {
+                        "name": "Scalar Multiplication of a Point",
+                        "count": "1"
+                    },
+                    "490": {
+                        "name": "Palindrome (String)",
+                        "count": "1614"
+                    }
+                }
+            },
+            "47": {
+                "name": "Class 11",
+                "simulations": {
+                    "407": {
+                        "name": "Armstrong or Not",
+                        "count": "1026"
+                    },
+                    "404": {
+                        "name": "Read a Number",
+                        "count": "1012"
+                    },
+                    "299": {
+                        "name": "Odd or Even",
+                        "count": "1"
+                    },
+                    "406": {
+                        "name": "Largest of Three Numbers",
+                        "count": "1015"
+                    },
+                    "420": {
+                        "name": "Prime or Not",
+                        "count": "1642"
+                    },
+                    "295": {
+                        "name": "Add Two Numbers",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 11",
+                        "count": "N/A"
+                    },
+                    "828": {
+                        "name": "Write a program to print all numbers from 1 to 100",
+                        "count": "1"
+                    },
+                    "403": {
+                        "name": "Factorial (Recursive)",
+                        "count": "1021"
+                    },
+                    "824": {
+                        "name": "Given two Integers x and n, Compute x\u207f",
+                        "count": "1"
+                    },
+                    "408": {
+                        "name": "Simple Interest",
+                        "count": "1018"
+                    },
+                    "301": {
+                        "name": "Swap Two Numbers",
+                        "count": "1"
+                    },
+                    "300": {
+                        "name": "GCD Euclidean Algorithm",
+                        "count": "1"
+                    },
+                    "402": {
+                        "name": "LCM",
+                        "count": "1029"
+                    },
+                    "405": {
+                        "name": "Largest of Two Numbers",
+                        "count": "1023"
+                    },
+                    "297": {
+                        "name": "Factorial",
+                        "count": "1"
+                    },
+                    "409": {
+                        "name": "Compound Interest",
+                        "count": "1009"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Computer Science",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "80": {
+        "name": "Mathematics",
+        "branches": {
+            "20": {
+                "name": "Class 10",
+                "simulations": {
+                    "564": {
+                        "name": "Solution of a quadratic equation",
+                        "count": "1"
+                    },
+                    "171": {
+                        "name": "Tangents drawn from an external point",
+                        "count": "1"
+                    },
+                    "568": {
+                        "name": "Ogive (more than type)",
+                        "count": "1"
+                    },
+                    "357": {
+                        "name": "Surface area and the volume of a frustum of a cone",
+                        "count": "1"
+                    },
+                    "248": {
+                        "name": "Right circular cone",
+                        "count": "1"
+                    },
+                    "160": {
+                        "name": "Surface area of a sphere",
+                        "count": "1"
+                    },
+                    "562": {
+                        "name": "Ogive (less than type)",
+                        "count": "1"
+                    },
+                    "567": {
+                        "name": "Height of a building using a clinometer",
+                        "count": "1"
+                    },
+                    "245": {
+                        "name": "Right circular cylinder",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 10",
+                        "count": "N/A"
+                    },
+                    "163": {
+                        "name": "Volume of right circular cylinder",
+                        "count": "1"
+                    },
+                    "565": {
+                        "name": "Section formula",
+                        "count": "1"
+                    },
+                    "158": {
+                        "name": "Pythagoras theorem",
+                        "count": "1"
+                    },
+                    "561": {
+                        "name": "Experimental and theoretical probability",
+                        "count": "1"
+                    },
+                    "165": {
+                        "name": "Volume of a sphere",
+                        "count": "1"
+                    },
+                    "558": {
+                        "name": "Sum of the first n-even natural numbers",
+                        "count": "1"
+                    },
+                    "559": {
+                        "name": "To construct an open box of maximum volume",
+                        "count": "1"
+                    },
+                    "161": {
+                        "name": "Surface area of a cylinder",
+                        "count": "1"
+                    },
+                    "566": {
+                        "name": "Sum of the first n-natural numbers",
+                        "count": "1"
+                    },
+                    "261": {
+                        "name": "Tangent - Radius Property",
+                        "count": "1"
+                    },
+                    "214": {
+                        "name": "Angles in the same segment",
+                        "count": "1"
+                    },
+                    "164": {
+                        "name": "Volume of right circular cone",
+                        "count": "1"
+                    },
+                    "162": {
+                        "name": "Angle at the centre of a circle by an arc",
+                        "count": "1"
+                    },
+                    "167": {
+                        "name": "Arithmetic progression",
+                        "count": "1"
+                    },
+                    "560": {
+                        "name": "Ratio of areas of two similar triangles",
+                        "count": "1"
+                    },
+                    "642": {
+                        "name": "Relationship between areas and sides of similar triangles",
+                        "count": "1"
+                    },
+                    "563": {
+                        "name": "Thales Theorem",
+                        "count": "1"
+                    }
+                }
+            },
+            "21": {
+                "name": "Class 9",
+                "simulations": {
+                    "332": {
+                        "name": "Algebraic Identity (a + b)\u00b3",
+                        "count": "1"
+                    },
+                    "603": {
+                        "name": "Constructing a square-root spiral",
+                        "count": "1"
+                    },
+                    "350": {
+                        "name": "Frustum of a cone",
+                        "count": "1"
+                    },
+                    "345": {
+                        "name": "Congruence of triangles",
+                        "count": "1"
+                    },
+                    "647": {
+                        "name": "To verify experimentally that in a triangle, the longer side has the greater angle opposite to it.",
+                        "count": "1"
+                    },
+                    "346": {
+                        "name": "Cube and its surface area",
+                        "count": "1"
+                    },
+                    "169": {
+                        "name": "Area of rhombus",
+                        "count": "1"
+                    },
+                    "201": {
+                        "name": "Circumcentre of a triangle",
+                        "count": "1"
+                    },
+                    "178": {
+                        "name": "Area of parallelogram",
+                        "count": "1"
+                    },
+                    "344": {
+                        "name": "Algebraic Identity (a+b+c)\u00b2",
+                        "count": "1"
+                    },
+                    "213": {
+                        "name": "Solving simultaneous equations",
+                        "count": "1"
+                    },
+                    "202": {
+                        "name": "Incentre of a triangle",
+                        "count": "1"
+                    },
+                    "358": {
+                        "name": "Volume of a cuboid",
+                        "count": "1"
+                    },
+                    "179": {
+                        "name": "Area of triangle",
+                        "count": "1"
+                    },
+                    "347": {
+                        "name": "Cuboid and its total surface area",
+                        "count": "1"
+                    },
+                    "189": {
+                        "name": "Centroid of a triangle",
+                        "count": "1"
+                    },
+                    "334": {
+                        "name": "Angle sum property of triangle",
+                        "count": "1"
+                    },
+                    "546": {
+                        "name": "Sum of the angles of a quadrilateral is 360\u00b0",
+                        "count": "1"
+                    },
+                    "339": {
+                        "name": "Algebraic Identity (a\u00b3+b\u00b3)",
+                        "count": "1"
+                    },
+                    "223": {
+                        "name": "Least common multiple",
+                        "count": "1"
+                    },
+                    "216": {
+                        "name": "Properties of parallelogram",
+                        "count": "1"
+                    },
+                    "342": {
+                        "name": "Algebraic Identity (a\u00b3 - b\u00b3)",
+                        "count": "1"
+                    },
+                    "203": {
+                        "name": "The quadrilateral formed by the mid-points of a quadrilateral",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 9",
+                        "count": "N/A"
+                    },
+                    "254": {
+                        "name": "Factorization Of Polynomial",
+                        "count": "1"
+                    },
+                    "267": {
+                        "name": "Area of a triangles - same base and same parallels",
+                        "count": "1"
+                    },
+                    "335": {
+                        "name": "Form a cone and find its curved surface area",
+                        "count": "1"
+                    },
+                    "557": {
+                        "name": "Verifying the parallelogram-triangle area ratio on the same base and parallels",
+                        "count": "1"
+                    },
+                    "215": {
+                        "name": "Area of circle",
+                        "count": "1"
+                    },
+                    "343": {
+                        "name": "Algebraic Identity (a - b)\u00b2",
+                        "count": "1"
+                    },
+                    "355": {
+                        "name": "Similarity of two triangles",
+                        "count": "1"
+                    },
+                    "266": {
+                        "name": "Cyclic Quadrilateral Property",
+                        "count": "1"
+                    },
+                    "183": {
+                        "name": "Area of trapezium",
+                        "count": "1"
+                    },
+                    "268": {
+                        "name": "Exterior angle property of a triangle",
+                        "count": "1"
+                    },
+                    "349": {
+                        "name": "Factorization of Polynomial 2x\u00b2 +4x",
+                        "count": "1"
+                    },
+                    "331": {
+                        "name": "Algebraic Identity (a-b)\u00b3",
+                        "count": "1"
+                    },
+                    "643": {
+                        "name": "Angle properties of intersecting lines",
+                        "count": "1"
+                    },
+                    "618": {
+                        "name": "Parallelograms on the same base between same parallels are equal in area",
+                        "count": "1"
+                    },
+                    "181": {
+                        "name": "Mid-point theorem",
+                        "count": "1"
+                    }
+                }
+            },
+            "59": {
+                "name": "Class 7",
+                "simulations": {
+                    "639": {
+                        "name": "To verify that in a triangle sides opposite equal angles are equal",
+                        "count": "1"
+                    },
+                    "636": {
+                        "name": "To verify that in an isoceles triangle, angles opposite equal sides are equal",
+                        "count": "1"
+                    },
+                    "633": {
+                        "name": "To verify that when two lines intersect, vertically opposite angles are equal",
+                        "count": "1"
+                    },
+                    "628": {
+                        "name": "To obtain angle bisector of an angle by paper folding",
+                        "count": "1"
+                    },
+                    "360": {
+                        "name": "To subtract a polynomial from another polynomial",
+                        "count": "1"
+                    },
+                    "629": {
+                        "name": "To verify that vertically opposite angles are equal",
+                        "count": "1"
+                    },
+                    "341": {
+                        "name": "Addition of algebraic expression",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 7",
+                        "count": "N/A"
+                    },
+                    "637": {
+                        "name": "To verify that the sum of any two sides of a triangle is always greater than the third side",
+                        "count": "1"
+                    }
+                }
+            },
+            "60": {
+                "name": "Class 12",
+                "simulations": {
+                    "648": {
+                        "name": "To demonstrate a function which is one-one but not onto.",
+                        "count": "1"
+                    },
+                    "338": {
+                        "name": "Distributive vector multiplication",
+                        "count": "1"
+                    },
+                    "547": {
+                        "name": "Function that is not one-one but is onto",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 12",
+                        "count": "N/A"
+                    },
+                    "354": {
+                        "name": "Maximal area in rectangles with same perimeter",
+                        "count": "1"
+                    },
+                    "333": {
+                        "name": "Angle in a semicircle",
+                        "count": "1"
+                    },
+                    "551": {
+                        "name": "Limits",
+                        "count": "1"
+                    },
+                    "554": {
+                        "name": "Angle between two planes",
+                        "count": "1"
+                    },
+                    "553": {
+                        "name": "Rolle's Theorem",
+                        "count": "1"
+                    },
+                    "555": {
+                        "name": "Geometry: Graph of sin\u207b\u00b9x",
+                        "count": "1"
+                    }
+                }
+            },
+            "58": {
+                "name": "Class 11",
+                "simulations": {
+                    "602": {
+                        "name": "To find the values of sine and cosine functions",
+                        "count": "1"
+                    },
+                    "549": {
+                        "name": "Conic sections",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 11",
+                        "count": "N/A"
+                    },
+                    "550": {
+                        "name": "Linear Inequalities",
+                        "count": "1"
+                    },
+                    "265": {
+                        "name": "Set Theory: A \u222a (B \u2229 C) = (A \u222a B) \u2229 (A \u222a C)",
+                        "count": "1"
+                    },
+                    "353": {
+                        "name": "Relation and Function",
+                        "count": "1"
+                    },
+                    "548": {
+                        "name": "Sample space, when a die is rolled",
+                        "count": "1"
+                    },
+                    "540": {
+                        "name": "Sum of squares of first n-natural numbers",
+                        "count": "1"
+                    },
+                    "264": {
+                        "name": "Set theoretic operations using Venn diagrams",
+                        "count": "1"
+                    },
+                    "552": {
+                        "name": "The geometrical significance of derivative",
+                        "count": "1"
+                    }
+                }
+            },
+            "56": {
+                "name": "Class 8",
+                "simulations": {
+                    "645": {
+                        "name": "To make a parallelogram, rectangle, square and trapezium using set squares",
+                        "count": "1"
+                    },
+                    "646": {
+                        "name": "Sum of exterior angles of a triangle and a quadrilateral is 360\u00b0",
+                        "count": "1"
+                    },
+                    "644": {
+                        "name": "To verify that opposite angles of a parallelogram are equal",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 8",
+                        "count": "N/A"
+                    },
+                    "253": {
+                        "name": "Algebraic Identity   (a+b)\u00b2",
+                        "count": "1"
+                    },
+                    "351": {
+                        "name": "Multiply two linear algebraic expressions",
+                        "count": "1"
+                    },
+                    "365": {
+                        "name": "To make a square by paper folding and cutting",
+                        "count": "1"
+                    },
+                    "337": {
+                        "name": "Ratio of circumference and diameter of circle",
+                        "count": "1"
+                    },
+                    "336": {
+                        "name": "Algebraic Identity (a\u00b2-b\u00b2)",
+                        "count": "1"
+                    },
+                    "352": {
+                        "name": "Pythagoras theorem by bhaskara method",
+                        "count": "1"
+                    },
+                    "255": {
+                        "name": "Solving a linear equation",
+                        "count": "1"
+                    }
+                }
+            },
+            "57": {
+                "name": "Class 6",
+                "simulations": {
+                    "257": {
+                        "name": "Sum of fractions with same denominators",
+                        "count": "1"
+                    },
+                    "258": {
+                        "name": "Subtraction of fractions with same denominator",
+                        "count": "1"
+                    },
+                    "622": {
+                        "name": "To add integers",
+                        "count": "1"
+                    },
+                    "621": {
+                        "name": "To find HCF of two numbers.",
+                        "count": "1"
+                    },
+                    "624": {
+                        "name": "To make a protractor by paper folding",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 6",
+                        "count": "N/A"
+                    },
+                    "627": {
+                        "name": "To subtract integers",
+                        "count": "1"
+                    },
+                    "356": {
+                        "name": "Subtraction of fractions with different denominator",
+                        "count": "1"
+                    },
+                    "256": {
+                        "name": "To find fractions equivalent to a given fraction\u200b",
+                        "count": "1"
+                    },
+                    "340": {
+                        "name": "Sum of fractions with different denominators",
+                        "count": "1"
+                    },
+                    "625": {
+                        "name": "To make a rhombus by paper folding and cutting",
+                        "count": "1"
+                    },
+                    "620": {
+                        "name": "To verify distributive properties of whole numbers",
+                        "count": "1"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Mathematics",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "102": {
+        "name": "Social Science - Geography",
+        "branches": {
+            "67": {
+                "name": "Class 9",
+                "simulations": {
+                    "791": {
+                        "name": "India's wildlife (AR)",
+                        "count": "1"
+                    },
+                    "519": {
+                        "name": "India's natural vegetation",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 9",
+                        "count": "N/A"
+                    },
+                    "529": {
+                        "name": "India: Major rivers and lakes",
+                        "count": "1"
+                    }
+                }
+            },
+            "68": {
+                "name": "Class 10",
+                "simulations": {
+                    "N/A": {
+                        "name": "Class 10",
+                        "count": "N/A"
+                    },
+                    "527": {
+                        "name": "Major sea ports in India",
+                        "count": "1"
+                    },
+                    "581": {
+                        "name": "Major dams in India",
+                        "count": "1"
+                    },
+                    "612": {
+                        "name": "Major crops and cultivation",
+                        "count": "1"
+                    },
+                    "582": {
+                        "name": "Major soil types",
+                        "count": "1"
+                    },
+                    "528": {
+                        "name": "Major international airports in India",
+                        "count": "1"
+                    },
+                    "584": {
+                        "name": "Classification of minerals",
+                        "count": "1"
+                    },
+                    "583": {
+                        "name": "Distribution of minerals",
+                        "count": "1"
+                    }
+                }
+            },
+            "65": {
+                "name": "Class 7",
+                "simulations": {
+                    "517": {
+                        "name": "Water cycle",
+                        "count": "1"
+                    },
+                    "615": {
+                        "name": "Evolution of landforms",
+                        "count": "1"
+                    },
+                    "580": {
+                        "name": "World- Major seas, lakes and rivers",
+                        "count": "1"
+                    },
+                    "518": {
+                        "name": "Spring tides and neap tides",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 7",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "64": {
+                "name": "Class 6",
+                "simulations": {
+                    "579": {
+                        "name": "Revolution of the earth and seasons",
+                        "count": "1"
+                    },
+                    "575": {
+                        "name": "Types of maps",
+                        "count": "1"
+                    },
+                    "445": {
+                        "name": "India and its neighbouring countries",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 6",
+                        "count": "N/A"
+                    },
+                    "516": {
+                        "name": "The world: continents and oceans",
+                        "count": "1"
+                    },
+                    "531": {
+                        "name": "India and its physical divisions",
+                        "count": "1"
+                    },
+                    "515": {
+                        "name": "Layers of the atmosphere",
+                        "count": "1"
+                    },
+                    "577": {
+                        "name": "Maps and its components",
+                        "count": "1"
+                    },
+                    "792": {
+                        "name": "Solar system (VR)",
+                        "count": "1"
+                    },
+                    "576": {
+                        "name": "Latitudes and longitudes",
+                        "count": "1"
+                    },
+                    "578": {
+                        "name": "Earth's rotation- Day and night",
+                        "count": "1"
+                    }
+                }
+            },
+            "66": {
+                "name": "Class 8",
+                "simulations": {
+                    "574": {
+                        "name": "Resources and resources types",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 8",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Social Science - Geography",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "79": {
+        "name": "Biology",
+        "branches": {
+            "18": {
+                "name": "Class 12",
+                "simulations": {
+                    "920": {
+                        "name": "Flower Gametophyte Development",
+                        "count": "1"
+                    },
+                    "397": {
+                        "name": "Preparation and Analysis of Pedigree Chart",
+                        "count": "1"
+                    },
+                    "398": {
+                        "name": "Mendel\u2019s Law of Segregation",
+                        "count": "1"
+                    },
+                    "236": {
+                        "name": "Action of Salivary Amylase on Starch",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 12",
+                        "count": "N/A"
+                    },
+                    "282": {
+                        "name": "Study Pollen Tube Growth on Stigma",
+                        "count": "1"
+                    },
+                    "597": {
+                        "name": "Common Disease-Causing Organisms and Symptoms of the Disease",
+                        "count": "1"
+                    },
+                    "324": {
+                        "name": "Percentage of Pollen Germination",
+                        "count": "1"
+                    },
+                    "430": {
+                        "name": "Steps of Artificial Hybridization",
+                        "count": "1"
+                    },
+                    "474": {
+                        "name": "Law of Independent Assortment",
+                        "count": "1"
+                    },
+                    "237": {
+                        "name": "Study Mitosis in Onion Root Tip",
+                        "count": "1"
+                    },
+                    "476": {
+                        "name": "Staining of Nucleic Acid by Acetocarmine",
+                        "count": "1"
+                    },
+                    "239": {
+                        "name": "Study of plant population density by quadrat method",
+                        "count": "1"
+                    },
+                    "440": {
+                        "name": "Study of adaptations of Xerophytes and Hydrophytes",
+                        "count": "1"
+                    },
+                    "235": {
+                        "name": "Study of Physical Properties of Soil",
+                        "count": "1"
+                    },
+                    "316": {
+                        "name": "Stages of gametogenesis in mammalian testis and ovary",
+                        "count": "1"
+                    },
+                    "228": {
+                        "name": "Study of Pollen Germination",
+                        "count": "1"
+                    },
+                    "240": {
+                        "name": "Study of pollutants in Air",
+                        "count": "1"
+                    },
+                    "391": {
+                        "name": "Study of Blastula Stages in Mammals",
+                        "count": "1"
+                    },
+                    "238": {
+                        "name": "Study of plant population frequency by quadrat method",
+                        "count": "1"
+                    },
+                    "460": {
+                        "name": "Study of Stages of Meiosis using permanent slides",
+                        "count": "1"
+                    },
+                    "229": {
+                        "name": "Studies on Turbidity, pH and Microbial Presence in Water",
+                        "count": "1"
+                    }
+                }
+            },
+            "16": {
+                "name": "Class 10",
+                "simulations": {
+                    "123": {
+                        "name": "Imbibition by Raisins",
+                        "count": "1"
+                    },
+                    "137": {
+                        "name": "Demonstration of Stomata on a Leaf Peel",
+                        "count": "1"
+                    },
+                    "135": {
+                        "name": "Embryo of Dicot Seeds",
+                        "count": "1"
+                    },
+                    "134": {
+                        "name": "Asexual Reproduction in Amoeba and  Yeast",
+                        "count": "1"
+                    },
+                    "390": {
+                        "name": "Liberation of Carbon Dioxide gas during Fermentation",
+                        "count": "1"
+                    },
+                    "136": {
+                        "name": "Role of Carbon Dioxide during Respiration",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 10",
+                        "count": "N/A"
+                    },
+                    "132": {
+                        "name": "Homology and Analogy",
+                        "count": "1"
+                    },
+                    "545": {
+                        "name": "Carbon dioxide is essential for Photosynthesis",
+                        "count": "1"
+                    },
+                    "600": {
+                        "name": "Vegetative Propagation in Potato, Bryophyllum and Aquatic Plant",
+                        "count": "1"
+                    },
+                    "126": {
+                        "name": "Importance of Light in Photosynthesis",
+                        "count": "1"
+                    },
+                    "315": {
+                        "name": "Study of Phototropism and Geotropism in Plants",
+                        "count": "1"
+                    }
+                }
+            },
+            "17": {
+                "name": "Class 11",
+                "simulations": {
+                    "319": {
+                        "name": "Modifications of Stem",
+                        "count": "1"
+                    },
+                    "207": {
+                        "name": "Detection of Sugar in Urine",
+                        "count": "1"
+                    },
+                    "199": {
+                        "name": "Study of Plasmolysis",
+                        "count": "1"
+                    },
+                    "208": {
+                        "name": "Detection of Albumin in Urine",
+                        "count": "1"
+                    },
+                    "198": {
+                        "name": "Characteristics of Flowers",
+                        "count": "1"
+                    },
+                    "447": {
+                        "name": "Morphology of Bacteria, Fungi and Different Plant Groups",
+                        "count": "1"
+                    },
+                    "281": {
+                        "name": "Modifications of Root",
+                        "count": "1"
+                    },
+                    "192": {
+                        "name": "Characteristics of Dicot and Monocot Stem and Root",
+                        "count": "1"
+                    },
+                    "182": {
+                        "name": "Study of Osmosis",
+                        "count": "1"
+                    },
+                    "436": {
+                        "name": "Parts of a Compound Microscope",
+                        "count": "1"
+                    },
+                    "128": {
+                        "name": "Study of distribution of stomata",
+                        "count": "1"
+                    },
+                    "211": {
+                        "name": "Detection of Bile salt in Urine",
+                        "count": "1"
+                    },
+                    "127": {
+                        "name": "Rate of Transpiration",
+                        "count": "1"
+                    },
+                    "922": {
+                        "name": "To Study Different Types of Joints in the Human Skeleton",
+                        "count": "1"
+                    },
+                    "124": {
+                        "name": "Paper Chromatography",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 11",
+                        "count": "N/A"
+                    },
+                    "413": {
+                        "name": "Study of Different Types of Inflorescences",
+                        "count": "1"
+                    },
+                    "206": {
+                        "name": "Detection of Urea in Urine",
+                        "count": "1"
+                    },
+                    "205": {
+                        "name": "Detection of Carbohydrates, Proteins and Fats",
+                        "count": "1"
+                    },
+                    "921": {
+                        "name": "Leaf Modification",
+                        "count": "1"
+                    },
+                    "429": {
+                        "name": "Study of External Features of Animals",
+                        "count": "1"
+                    },
+                    "204": {
+                        "name": "Rate of Respiration",
+                        "count": "1"
+                    }
+                }
+            },
+            "15": {
+                "name": "Class 9",
+                "simulations": {
+                    "131": {
+                        "name": "Plant and Animal Tissues",
+                        "count": "1"
+                    },
+                    "401": {
+                        "name": "Study the Phenomenon of Osmosis",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 9",
+                        "count": "N/A"
+                    },
+                    "433": {
+                        "name": "Study symptoms of the diseases in locally available crop plants",
+                        "count": "1"
+                    },
+                    "139": {
+                        "name": "Monocot and Dicot Plants",
+                        "count": "1"
+                    },
+                    "121": {
+                        "name": "Detection of Starch in Food Samples",
+                        "count": "1"
+                    },
+                    "669": {
+                        "name": "Parts of Dissecting Microscope",
+                        "count": "1"
+                    },
+                    "122": {
+                        "name": "Detection of Adulterant in Dal",
+                        "count": "1"
+                    },
+                    "422": {
+                        "name": "Prepare the Herbarium sheet of Flowering Plants",
+                        "count": "1"
+                    },
+                    "125": {
+                        "name": "Onion and Cheek Cells",
+                        "count": "1"
+                    },
+                    "138": {
+                        "name": "Life Cycle of a Mosquito",
+                        "count": "1"
+                    },
+                    "396": {
+                        "name": "Identify the Life Cycle of Malarial Parasite",
+                        "count": "1"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Biology",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "84": {
+        "name": "English",
+        "branches": {
+            "28": {
+                "name": "Subject-Verb Agreement",
+                "simulations": {
+                    "N/A": {
+                        "name": "Subject-Verb Agreement",
+                        "count": "N/A"
+                    },
+                    "222": {
+                        "name": "Subject-Verb Agreement",
+                        "count": "1"
+                    }
+                }
+            },
+            "30": {
+                "name": "Singular and Plural",
+                "simulations": {
+                    "432": {
+                        "name": "Pronunciation",
+                        "count": "1"
+                    },
+                    "232": {
+                        "name": "Singular to Plural Conversion",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Singular and Plural",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "25": {
+                "name": "Comprehension",
+                "simulations": {
+                    "187": {
+                        "name": "Improving Comprehension Skills",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Comprehension",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "86": {
+                "name": "Class 6",
+                "simulations": {
+                    "626": {
+                        "name": "Noun",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 6",
+                        "count": "N/A"
+                    },
+                    "638": {
+                        "name": "Adverb",
+                        "count": "1"
+                    },
+                    "649": {
+                        "name": "Prefix-Suffix",
+                        "count": "1"
+                    }
+                }
+            },
+            "22": {
+                "name": "Prepositions",
+                "simulations": {
+                    "188": {
+                        "name": "Learning Prepositions of Location",
+                        "count": "1"
+                    },
+                    "218": {
+                        "name": "Learning Preposition of direction",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Prepositions",
+                        "count": "N/A"
+                    },
+                    "217": {
+                        "name": "Correction and Omission Activity",
+                        "count": "1"
+                    },
+                    "194": {
+                        "name": "Learning Prepositions of Location-Picture Dictation",
+                        "count": "1"
+                    }
+                }
+            },
+            "24": {
+                "name": "Tenses",
+                "simulations": {
+                    "193": {
+                        "name": "Tense Conversion",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Tenses",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "26": {
+                "name": "Direct and Indirect Speech",
+                "simulations": {
+                    "N/A": {
+                        "name": "Direct and Indirect Speech",
+                        "count": "N/A"
+                    },
+                    "196": {
+                        "name": "Direct and Indirect Speech",
+                        "count": "499"
+                    },
+                    "219": {
+                        "name": "Reported Speech",
+                        "count": "1"
+                    }
+                }
+            },
+            "148": {
+                "name": "Class 7",
+                "simulations": {
+                    "N/A": {
+                        "name": "Class 7",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "23": {
+                "name": "Active and Passive Voice",
+                "simulations": {
+                    "186": {
+                        "name": "Active to Passive Voice Conversion",
+                        "count": "1"
+                    },
+                    "195": {
+                        "name": "Passive to Active Voice Conversion",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Active and Passive Voice",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "English",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "73": {
+        "name": "Chemistry",
+        "branches": {
+            "3": {
+                "name": "Class 10",
+                "simulations": {
+                    "269": {
+                        "name": "Reactions of NaOH with Aluminium Metal and HCl",
+                        "count": "1"
+                    },
+                    "392": {
+                        "name": "Show that Acids, Bases, and Salts are Electrolytes",
+                        "count": "1"
+                    },
+                    "270": {
+                        "name": "Identify Bleaching Powder among the given Samples of Chemicals",
+                        "count": "1"
+                    },
+                    "533": {
+                        "name": "To Identify Washing soda or Baking soda among given Samples of Chemicals",
+                        "count": "1"
+                    },
+                    "59": {
+                        "name": "To Study the Relative Reactivity of Metals using Salt Solution",
+                        "count": "1"
+                    },
+                    "283": {
+                        "name": "Compare the Foaming Capacity of Different Samples of Soap",
+                        "count": "1"
+                    },
+                    "304": {
+                        "name": "Measure the change in Temperature during Chemical Reactions",
+                        "count": "1"
+                    },
+                    "119": {
+                        "name": "Saponification-The process of Making Soap",
+                        "count": "1"
+                    },
+                    "280": {
+                        "name": "Esterification Reaction between Alcohol and Carboxylic Acid",
+                        "count": "1"
+                    },
+                    "80": {
+                        "name": "Decomposition Reaction",
+                        "count": "1"
+                    },
+                    "284": {
+                        "name": "Prepare Sulphur Dioxide Gas and Study its Physical and Chemical Properties",
+                        "count": "1"
+                    },
+                    "81": {
+                        "name": "Single Displacement Reaction",
+                        "count": "1"
+                    },
+                    "11": {
+                        "name": "Properties of Acetic Acid (Ethanoic Acid)",
+                        "count": "1"
+                    },
+                    "78": {
+                        "name": "Determine pH with pH indicator strips / universal indicator solution",
+                        "count": "1"
+                    },
+                    "79": {
+                        "name": "Combination Reaction",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 10",
+                        "count": "N/A"
+                    },
+                    "272": {
+                        "name": "Crystals of copper sulphate contain water of crystallization",
+                        "count": "1"
+                    },
+                    "279": {
+                        "name": "Oxidation Reactions of Alcohol",
+                        "count": "1"
+                    },
+                    "6": {
+                        "name": "Properties of Acids and Bases",
+                        "count": "1"
+                    },
+                    "120": {
+                        "name": "Cleaning Capacity of Soap with Hard and Soft Water",
+                        "count": "1"
+                    },
+                    "82": {
+                        "name": "Double Displacement Reaction",
+                        "count": "1"
+                    },
+                    "439": {
+                        "name": "Reaction of Metals with Water Under Different Temperature Conditions",
+                        "count": "1"
+                    }
+                }
+            },
+            "8": {
+                "name": "Class 12",
+                "simulations": {
+                    "117": {
+                        "name": "Kinetics Study on the Reaction between Iodide Ions and Hydrogen Peroxide",
+                        "count": "1"
+                    },
+                    "210": {
+                        "name": "Qualitative Analysis of Oils and Fats",
+                        "count": "1"
+                    },
+                    "116": {
+                        "name": "Preparation of Organic Compounds",
+                        "count": "1"
+                    },
+                    "153": {
+                        "name": "Determination of EMF of a Cell",
+                        "count": "1"
+                    },
+                    "145": {
+                        "name": "Thermochemistry",
+                        "count": "1"
+                    },
+                    "133": {
+                        "name": "Paper Chromatography",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 12",
+                        "count": "N/A"
+                    },
+                    "142": {
+                        "name": "Kinetics Study on the Reaction between Sodium Thiosulphate and Hydrochloric Acid",
+                        "count": "1"
+                    },
+                    "115": {
+                        "name": "Determination of concentration of KMnO\u2084 solution",
+                        "count": "1"
+                    },
+                    "143": {
+                        "name": "Kinetics Study on the Reaction between Potassium iodate and Sodium Sulphite",
+                        "count": "1"
+                    },
+                    "209": {
+                        "name": "Qualitative Analysis of Carbohydrates",
+                        "count": "1"
+                    },
+                    "410": {
+                        "name": "To Determine the Enthalpy of Neutralization of a Strong Acid(HCl) with a Strong Base (NaOH)",
+                        "count": "1"
+                    },
+                    "395": {
+                        "name": "Effect of concentration and temperature variation on the rate of chemical reaction",
+                        "count": "1"
+                    },
+                    "114": {
+                        "name": "Preparation of Inorganic Compounds",
+                        "count": "1"
+                    },
+                    "35": {
+                        "name": "Effectiveness of Different Common Oils in Forming Emulsions",
+                        "count": "1"
+                    },
+                    "427": {
+                        "name": "Enthalpy Change for the Interaction between Acetone and Chloroform",
+                        "count": "1"
+                    },
+                    "367": {
+                        "name": "Preparation of Aniline yellow",
+                        "count": "1"
+                    },
+                    "141": {
+                        "name": "Tests for the functional groups",
+                        "count": "1"
+                    },
+                    "140": {
+                        "name": "Qualitative Analysis of Proteins",
+                        "count": "1"
+                    },
+                    "34": {
+                        "name": "Preparation of Lyophilic and Lyophobic Sols",
+                        "count": "1"
+                    }
+                }
+            },
+            "2": {
+                "name": "Class 9",
+                "simulations": {
+                    "321": {
+                        "name": "To Study the Changes in the State of Sublimate Solids on Heating",
+                        "count": "1"
+                    },
+                    "30": {
+                        "name": "Melting Point of Ice",
+                        "count": "1"
+                    },
+                    "96": {
+                        "name": "Separation of Mixtures Using Different Techniques",
+                        "count": "1"
+                    },
+                    "29": {
+                        "name": "Boiling Point of Water",
+                        "count": "1"
+                    },
+                    "70": {
+                        "name": "Distinguish Between Mixture and Compound",
+                        "count": "1"
+                    },
+                    "28": {
+                        "name": "Distinguishing Between Solutions",
+                        "count": "68"
+                    },
+                    "39": {
+                        "name": "Separation of Components of a Mixture",
+                        "count": "1"
+                    },
+                    "425": {
+                        "name": "Process of Evaporation",
+                        "count": "1"
+                    },
+                    "77": {
+                        "name": "Chemical Reactions",
+                        "count": "1"
+                    },
+                    "412": {
+                        "name": "Prepare a Colloidal Solution of Sulphur",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 9",
+                        "count": "N/A"
+                    },
+                    "118": {
+                        "name": "The Law of Conservation of Mass in a Chemical Reaction",
+                        "count": "1"
+                    },
+                    "438": {
+                        "name": "To show that Gases are readily Compressible and Liquids are not",
+                        "count": "1"
+                    }
+                }
+            },
+            "7": {
+                "name": "Class 11",
+                "simulations": {
+                    "33": {
+                        "name": "Melting Point of an Organic Compound.",
+                        "count": "1"
+                    },
+                    "470": {
+                        "name": "Heating of Solution in a Beaker",
+                        "count": "1"
+                    },
+                    "423": {
+                        "name": "Study the Shift in Equilibrium between Ferric ions and Thiocyanate ions",
+                        "count": "1"
+                    },
+                    "32": {
+                        "name": "Basic Laboratory Techniques",
+                        "count": "1"
+                    },
+                    "109": {
+                        "name": "Quantitative Estimation",
+                        "count": "1"
+                    },
+                    "144": {
+                        "name": "Determination of pH",
+                        "count": "1"
+                    },
+                    "180": {
+                        "name": "Qualitative Analysis of Cations",
+                        "count": "1"
+                    },
+                    "393": {
+                        "name": "Preparation of (250 mL of 0.1M) Standard Solution of Oxalic Acid",
+                        "count": "1"
+                    },
+                    "112": {
+                        "name": "Chemical Equilibrium",
+                        "count": "1"
+                    },
+                    "424": {
+                        "name": "Study the Shift in Equilibrium between [Co(H\u2082O)\u2086]\u202f\u00b2\u207a and Cl\u207b ions",
+                        "count": "1"
+                    },
+                    "111": {
+                        "name": "Boiling Point of an Organic Compound",
+                        "count": "1"
+                    },
+                    "110": {
+                        "name": "Purification of Impure Samples by Crystallization",
+                        "count": "1"
+                    },
+                    "149": {
+                        "name": "Detection of Elements: Lassaigne's Test",
+                        "count": "1"
+                    },
+                    "434": {
+                        "name": "Study the Process of Filtration",
+                        "count": "1"
+                    },
+                    "31": {
+                        "name": "Qualitative Analysis of Anions",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 11",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "1": {
+        "name": "Physics",
+        "branches": {
+            "6": {
+                "name": "Class 12",
+                "simulations": {
+                    "307": {
+                        "name": "Refractive Index of Glass slab using Travelling Microscope",
+                        "count": "1"
+                    },
+                    "231": {
+                        "name": "The potentiometer- Comparison of emf",
+                        "count": "1"
+                    },
+                    "152": {
+                        "name": "Figure of Merit of a galvanometer",
+                        "count": "1"
+                    },
+                    "619": {
+                        "name": "The earth's magnetic field has both vertical and horizontal components",
+                        "count": "1"
+                    },
+                    "247": {
+                        "name": "Refractive Index of a Liquid",
+                        "count": "1"
+                    },
+                    "305": {
+                        "name": "Conversion of Galvanometer to Voltmeter",
+                        "count": "1"
+                    },
+                    "411": {
+                        "name": "Voltage Measuring Device has Non Infinite Resistance",
+                        "count": "1"
+                    },
+                    "485": {
+                        "name": "Like Charges Repel and Unlike Charges Attract",
+                        "count": "1"
+                    },
+                    "243": {
+                        "name": "Convex Mirror - Focal Length",
+                        "count": "1"
+                    },
+                    "536": {
+                        "name": "Effect of adding Sodium Chloride on the Electrical Conductivity of Distilled Water",
+                        "count": "1"
+                    },
+                    "544": {
+                        "name": "Production of Induced emf in a Coil",
+                        "count": "1"
+                    },
+                    "150": {
+                        "name": "Metre bridge- Law of combination of resistors",
+                        "count": "1"
+                    },
+                    "26": {
+                        "name": "Conversion of Galvanometer to Ammeter",
+                        "count": "1"
+                    },
+                    "414": {
+                        "name": "Induced emf in Inductive Circuit",
+                        "count": "1"
+                    },
+                    "244": {
+                        "name": "Concave Lens - Focal Length",
+                        "count": "1"
+                    },
+                    "234": {
+                        "name": "Transistor characteristics",
+                        "count": "1"
+                    },
+                    "592": {
+                        "name": "Current Measuring Device has Finite Non-zero Resistance",
+                        "count": "1"
+                    },
+                    "151": {
+                        "name": "AC Sonometer",
+                        "count": "1"
+                    },
+                    "233": {
+                        "name": "Diode characteristics",
+                        "count": "1"
+                    },
+                    "572": {
+                        "name": "To demonstrate Electrostatic Shielding",
+                        "count": "1"
+                    },
+                    "22": {
+                        "name": "Ohm's law and resistance",
+                        "count": "1"
+                    },
+                    "147": {
+                        "name": "The Potentiometer-Internal resistance of a cell",
+                        "count": "1"
+                    },
+                    "146": {
+                        "name": "Metre Bridge-Resistance of a wire",
+                        "count": "1"
+                    },
+                    "24": {
+                        "name": "Zener Diode",
+                        "count": "1"
+                    },
+                    "230": {
+                        "name": "The Concave mirror - u-v method",
+                        "count": "1"
+                    },
+                    "591": {
+                        "name": "Study the Magnetic Field Pattern of Various Materials Using a Bar Magnet",
+                        "count": "1"
+                    },
+                    "246": {
+                        "name": "Refraction through a Prism",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 12",
+                        "count": "N/A"
+                    },
+                    "507": {
+                        "name": "Repulsion/attraction between two conductors carrying current in opposite/same direction",
+                        "count": "1"
+                    }
+                }
+            },
+            "5": {
+                "name": "Class 11",
+                "simulations": {
+                    "369": {
+                        "name": "Motion of a Ball on an Inclined Track",
+                        "count": "1"
+                    },
+                    "36": {
+                        "name": "Resonance Column",
+                        "count": "1"
+                    },
+                    "20": {
+                        "name": "Parallelogram Law of Vectors",
+                        "count": "1"
+                    },
+                    "159": {
+                        "name": "Simple pendulum",
+                        "count": "1"
+                    },
+                    "155": {
+                        "name": "Young's Modulus",
+                        "count": "1"
+                    },
+                    "16": {
+                        "name": "Vernier Calipers",
+                        "count": "1"
+                    },
+                    "21": {
+                        "name": "Newton's Law of Cooling(Thermal Radiation)",
+                        "count": "1"
+                    },
+                    "443": {
+                        "name": "Beats Produced by two Tuning Forks",
+                        "count": "1"
+                    },
+                    "441": {
+                        "name": "Bernoulli's Theorem",
+                        "count": "1"
+                    },
+                    "19": {
+                        "name": "Inclined Plane",
+                        "count": "1"
+                    },
+                    "227": {
+                        "name": "Sonometer",
+                        "count": "1"
+                    },
+                    "226": {
+                        "name": "Boyle's Law",
+                        "count": "1"
+                    },
+                    "168": {
+                        "name": "Spherometer",
+                        "count": "1"
+                    },
+                    "473": {
+                        "name": "Reflection and Transmission of Waves",
+                        "count": "1"
+                    },
+                    "156": {
+                        "name": "Screw Gauge",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 11",
+                        "count": "N/A"
+                    },
+                    "472": {
+                        "name": "Affect of Atmospheric Pressure",
+                        "count": "1"
+                    },
+                    "446": {
+                        "name": "Demonstration of Standing Waves using a Spring",
+                        "count": "1"
+                    },
+                    "197": {
+                        "name": "Helical Spring",
+                        "count": "1"
+                    },
+                    "610": {
+                        "name": "To Demonstrate Resonance with a set of Coupled Pendulums",
+                        "count": "1"
+                    },
+                    "571": {
+                        "name": "To demonstrate Interconversion of Potential and Kinetic Energy",
+                        "count": "1"
+                    },
+                    "475": {
+                        "name": "Demonstration of Capillary Rise",
+                        "count": "1"
+                    },
+                    "224": {
+                        "name": "Surface Tension",
+                        "count": "554"
+                    },
+                    "225": {
+                        "name": "Viscosity of a liquid - Stoke's method",
+                        "count": "1"
+                    },
+                    "323": {
+                        "name": "Specific Heat Capacity of Solid and Liquid",
+                        "count": "1"
+                    },
+                    "191": {
+                        "name": "Friction",
+                        "count": "1"
+                    },
+                    "185": {
+                        "name": "Beam Balance",
+                        "count": "1"
+                    }
+                }
+            },
+            "1": {
+                "name": "Class 9",
+                "simulations": {
+                    "288": {
+                        "name": "Strength of Electromagnets",
+                        "count": "1"
+                    },
+                    "499": {
+                        "name": "To Study the Variation in Limiting Friction with Mass and the Nature of Surfaces in Contact",
+                        "count": "1"
+                    },
+                    "83": {
+                        "name": "Bell Jar Experiment",
+                        "count": "1"
+                    },
+                    "513": {
+                        "name": "To Plot Temperature\u2013Time Graph for a Hot Object as it Cools",
+                        "count": "1"
+                    },
+                    "44": {
+                        "name": "Verification of Newton's Second Law",
+                        "count": "1"
+                    },
+                    "72": {
+                        "name": "Verification of Archimedes' Principle",
+                        "count": "1"
+                    },
+                    "71": {
+                        "name": "Pressure Exerted by a Solid Iron Cuboid on Sand",
+                        "count": "1"
+                    },
+                    "482": {
+                        "name": "Speed of a Transverse Pulse Propagated through a Stretched String",
+                        "count": "1"
+                    },
+                    "2": {
+                        "name": "Determination of Density of Solid",
+                        "count": "9"
+                    },
+                    "289": {
+                        "name": "Working principle of a Rubber Dropper",
+                        "count": "1"
+                    },
+                    "93": {
+                        "name": "Velocity of a Pulse Propagated Through a Slinky",
+                        "count": "1"
+                    },
+                    "105": {
+                        "name": "Newton's Third law of Motion",
+                        "count": "1"
+                    },
+                    "108": {
+                        "name": "Force required to move a wooden block",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 9",
+                        "count": "N/A"
+                    },
+                    "368": {
+                        "name": "Velocity-Time(v - t)Graph",
+                        "count": "1"
+                    },
+                    "1": {
+                        "name": "Laws of Reflection of Sound",
+                        "count": "1"
+                    },
+                    "500": {
+                        "name": "Study the Relation between Loss in weight of Solid in Tap water and in Salty water",
+                        "count": "1"
+                    },
+                    "303": {
+                        "name": "Simple Pendulum - Amplitude and Time period",
+                        "count": "1"
+                    }
+                }
+            },
+            "4": {
+                "name": "Class 10",
+                "simulations": {
+                    "277": {
+                        "name": "Convex Lens Focal Length",
+                        "count": "1"
+                    },
+                    "596": {
+                        "name": "Verify Laws of Reflection Using a Plane Mirror",
+                        "count": "1"
+                    },
+                    "99": {
+                        "name": "Ohm's Law",
+                        "count": "1"
+                    },
+                    "41": {
+                        "name": "Equivalent Resistance of Resistors (Parallel)",
+                        "count": "1"
+                    },
+                    "40": {
+                        "name": "Equivalent Resistance of Resistors (Series)",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 10",
+                        "count": "N/A"
+                    },
+                    "278": {
+                        "name": "Convex Lens - Image Formation and Magnification",
+                        "count": "1"
+                    }
+                }
+            }
+        }
+    },
+    "74": {
+        "name": "Physics",
+        "branches": {
+            "9": {
+                "name": "Class 10",
+                "simulations": {
+                    "74": {
+                        "name": "To study the field lines formed around a bar magnet",
+                        "count": "1"
+                    },
+                    "67": {
+                        "name": "To find focal length of a Concave Mirror",
+                        "count": "1"
+                    },
+                    "68": {
+                        "name": "Verification of Hooke's Law",
+                        "count": "1"
+                    },
+                    "37": {
+                        "name": "To study refraction of light in rectangular glass slab",
+                        "count": "1"
+                    },
+                    "91": {
+                        "name": "The magnetic field lines around current carrying solenoid.",
+                        "count": "1"
+                    },
+                    "241": {
+                        "name": "Force on a current carrying conductor in a magnetic field",
+                        "count": "1"
+                    },
+                    "38": {
+                        "name": "To study reflection in concave mirror",
+                        "count": "1"
+                    },
+                    "242": {
+                        "name": "Electromagnetic Induction",
+                        "count": "1"
+                    },
+                    "90": {
+                        "name": "Magnetic field lines around current carrying conductor",
+                        "count": "1"
+                    },
+                    "75": {
+                        "name": "Verification of Ohm's Law",
+                        "count": "1"
+                    }
+                }
+            }
+        }
+    },
+    "96": {
+        "name": "Science",
+        "branches": {
+            "46": {
+                "name": "Class 7",
+                "simulations": {
+                    "484": {
+                        "name": "To Burn a Candle in a Glass full of water",
+                        "count": "1"
+                    },
+                    "394": {
+                        "name": "Identify the Parts of a Flower and Distinguish between Unisexual and Bisexual Flowers",
+                        "count": "1"
+                    },
+                    "486": {
+                        "name": "Speed of Hoping on One Leg",
+                        "count": "1"
+                    },
+                    "291": {
+                        "name": "Reaction between an acid and a base to show the process of neutralization",
+                        "count": "1"
+                    },
+                    "306": {
+                        "name": "Infiltration of Water through Soil",
+                        "count": "1"
+                    },
+                    "542": {
+                        "name": "Study the Exhaled air contains Carbon Dioxide",
+                        "count": "1"
+                    },
+                    "651": {
+                        "name": "Oxygen is necessary for combustion",
+                        "count": "1"
+                    },
+                    "480": {
+                        "name": "Measure the Temperature of Water when it is Heated, Boiling and Cooling",
+                        "count": "1"
+                    },
+                    "478": {
+                        "name": "Differentiate among the changes such as Folding of Paper, Tearing of Paper and Burning of Paper",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 7",
+                        "count": "N/A"
+                    },
+                    "294": {
+                        "name": "Strength of Electromagnets",
+                        "count": "1"
+                    },
+                    "298": {
+                        "name": "Identification of the Acidic, Basic, Neutral Nature of Salt Solutions",
+                        "count": "1"
+                    },
+                    "296": {
+                        "name": "Working Principle of a Rubber Dropper",
+                        "count": "1"
+                    },
+                    "419": {
+                        "name": "Mechanism of Breathing",
+                        "count": "1"
+                    },
+                    "293": {
+                        "name": "Cleaning of Muddy Water",
+                        "count": "1"
+                    },
+                    "421": {
+                        "name": "Stomata in Leaves",
+                        "count": "1"
+                    },
+                    "292": {
+                        "name": "Leaves Prepare Starch by the Process of Photosynthesis",
+                        "count": "1"
+                    },
+                    "290": {
+                        "name": "Show that metallic oxides are basic in nature",
+                        "count": "1"
+                    },
+                    "311": {
+                        "name": "To show that hydrogen gas evolved by the action of acids on some metals",
+                        "count": "1"
+                    },
+                    "318": {
+                        "name": "Study of Reproduction in Fungi",
+                        "count": "1"
+                    },
+                    "535": {
+                        "name": "To distinguish between Good conductors and Poor conductors of heat",
+                        "count": "1"
+                    },
+                    "611": {
+                        "name": "To Compare the Water Absorption Capacity of Fibres",
+                        "count": "1"
+                    },
+                    "302": {
+                        "name": "Air Expands on heating",
+                        "count": "1"
+                    }
+                }
+            },
+            "50": {
+                "name": "Class 6",
+                "simulations": {
+                    "586": {
+                        "name": "To study the Role of Air in each Activity",
+                        "count": "1"
+                    },
+                    "359": {
+                        "name": "Classification of materials on the basis of its properties",
+                        "count": "1"
+                    },
+                    "444": {
+                        "name": "Fun with Dancing balls",
+                        "count": "1"
+                    },
+                    "514": {
+                        "name": "Study the Recycle of Waste paper",
+                        "count": "1"
+                    },
+                    "928": {
+                        "name": "How Shadows are Formed",
+                        "count": "1"
+                    },
+                    "927": {
+                        "name": "Demonstrating Carbon Dioxide Presence in the Air",
+                        "count": "1"
+                    },
+                    "479": {
+                        "name": "Leaves release Water Vapour during Transpiration",
+                        "count": "1"
+                    },
+                    "650": {
+                        "name": "Make the Bulb Glow",
+                        "count": "1"
+                    },
+                    "599": {
+                        "name": "Electric conductivity of metals and non-metals",
+                        "count": "1"
+                    },
+                    "309": {
+                        "name": "Separate three Components from Iron, Sand and Common Salt Mixture",
+                        "count": "1"
+                    },
+                    "523": {
+                        "name": "Garbage in Garbage out",
+                        "count": "1"
+                    },
+                    "543": {
+                        "name": "Save the Environment",
+                        "count": "1"
+                    },
+                    "435": {
+                        "name": "Reversible and Irreversible Reaction",
+                        "count": "1"
+                    },
+                    "483": {
+                        "name": "Both Poles of Magnet are Equally Strong or not",
+                        "count": "1"
+                    },
+                    "442": {
+                        "name": "Fabrics that are obtained from fibre",
+                        "count": "1"
+                    },
+                    "426": {
+                        "name": "Difference between Natural and Man made Fibres",
+                        "count": "1"
+                    },
+                    "652": {
+                        "name": "Measuring the Length of a Room",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 6",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "49": {
+                "name": "Class 8",
+                "simulations": {
+                    "N/A": {
+                        "name": "Class 8",
+                        "count": "N/A"
+                    },
+                    "418": {
+                        "name": "Concept of Net Force",
+                        "count": "1"
+                    },
+                    "415": {
+                        "name": "Study how Insect pests spoil Food Grains",
+                        "count": "1"
+                    },
+                    "924": {
+                        "name": "To Observe that the Appearance of the Moon Changes Every Night",
+                        "count": "1"
+                    },
+                    "308": {
+                        "name": "Liquid Pressure",
+                        "count": "1"
+                    },
+                    "310": {
+                        "name": "Show that iron is more reactive than copper",
+                        "count": "1"
+                    },
+                    "317": {
+                        "name": "Study the Electrolysis of Water",
+                        "count": "1"
+                    },
+                    "925": {
+                        "name": "Show that Fuel or Substance should be Heated to its Ignition Temperature to make it Burn",
+                        "count": "1"
+                    },
+                    "471": {
+                        "name": "Gender Discrimination",
+                        "count": "1"
+                    },
+                    "481": {
+                        "name": "We Can Face the World",
+                        "count": "1"
+                    },
+                    "623": {
+                        "name": "Show that fuel/substance should be heated to its ignition temperature to make it burn",
+                        "count": "1"
+                    },
+                    "526": {
+                        "name": "Air exerts pressure",
+                        "count": "1"
+                    },
+                    "313": {
+                        "name": "Show that non-metallic oxides are acidic in nature",
+                        "count": "1"
+                    },
+                    "477": {
+                        "name": "Relationship between the Increase in Weight on the Surface and Static Friction",
+                        "count": "1"
+                    },
+                    "608": {
+                        "name": "Reproduction in Yeast Cell",
+                        "count": "1"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Science",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "105": {
+        "name": "Language - Sanskrit",
+        "branches": {
+            "82": {
+                "name": "Class 6-7",
+                "simulations": {
+                    "361": {
+                        "name": "\u0938\u0902\u091c\u094d\u091e\u093e - \u0936\u092c\u094d\u0926\u0930\u0942\u092a",
+                        "count": "1"
+                    },
+                    "810": {
+                        "name": "\u0935\u0930\u094d\u0923 \u0935\u093f\u091a\u094d\u091b\u0947\u0926",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 6-7",
+                        "count": "N/A"
+                    },
+                    "806": {
+                        "name": "\u0909\u091a\u093f\u0924 \u0930\u0942\u092a\u092e\u094d",
+                        "count": "1"
+                    },
+                    "362": {
+                        "name": "\u0927\u093e\u0924\u0941-\u0930\u0942\u092a\u093e\u0923\u093f",
+                        "count": "1"
+                    },
+                    "808": {
+                        "name": "\u092a\u0924\u094d\u0930\u0932\u0947\u0916\u0928\u092e\u094d",
+                        "count": "1"
+                    },
+                    "805": {
+                        "name": "\u091a\u093f\u0924\u094d\u0930\u0935\u0930\u094d\u0923\u0928\u092e\u094d",
+                        "count": "1"
+                    },
+                    "809": {
+                        "name": "\u0935\u093e\u0915\u094d\u092f \u0905\u0928\u0941\u0935\u093e\u0926",
+                        "count": "1"
+                    },
+                    "364": {
+                        "name": "\u0935\u091a\u0928 \u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928",
+                        "count": "1"
+                    },
+                    "804": {
+                        "name": "\u0938\u0902\u0927\u093f",
+                        "count": "1"
+                    },
+                    "363": {
+                        "name": "\u0938\u0930\u094d\u0935\u0928\u093e\u092e \u0936\u092c\u094d\u0926\u0930\u0942\u092a",
+                        "count": "1"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Language - Sanskrit",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "112": {
+        "name": "3D",
+        "branches": {
+            "87": {
+                "name": "Class 6",
+                "simulations": {
+                    "663": {
+                        "name": "How Shadows are Formed",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 6",
+                        "count": "N/A"
+                    },
+                    "664": {
+                        "name": "Electric conductivity of metals and non-metals",
+                        "count": "1"
+                    }
+                }
+            },
+            "99": {
+                "name": "Class 10",
+                "simulations": {
+                    "666": {
+                        "name": "Vegetative Propagation in Potato, Bryophyllum and Aquatic Plant",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 10",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "85": {
+                "name": "Class 8",
+                "simulations": {
+                    "530": {
+                        "name": "Observation of Pond water for the presence of Micro-Organisms",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 8",
+                        "count": "N/A"
+                    },
+                    "667": {
+                        "name": "Air exerts pressure",
+                        "count": "1"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "3D",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "88": {
+                "name": "Class 9",
+                "simulations": {
+                    "N/A": {
+                        "name": "Class 9",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "90": {
+                "name": "Class 7",
+                "simulations": {
+                    "660": {
+                        "name": "Oxygen is necessary for combustion",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 7",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "104": {
+        "name": "Language - Hindi",
+        "branches": {
+            "77": {
+                "name": "\u0935\u094d\u092f\u093e\u0915\u0930\u0923",
+                "simulations": {
+                    "570": {
+                        "name": "\u0935\u0930\u094d\u0923-\u0935\u093f\u091a\u094d\u091b\u0947\u0926",
+                        "count": "1"
+                    },
+                    "807": {
+                        "name": "\u0915\u094d\u0930\u093f\u092f\u093e",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "\u0935\u094d\u092f\u093e\u0915\u0930\u0923",
+                        "count": "N/A"
+                    },
+                    "569": {
+                        "name": "\u0938\u0902\u0927\u093f \u0935\u093f\u091a\u094d\u091b\u0947\u0926",
+                        "count": "1"
+                    },
+                    "506": {
+                        "name": "\u0935\u093f\u0936\u0947\u0937\u0923 \u0915\u0947 \u092a\u094d\u0930\u0915\u093e\u0930",
+                        "count": "1"
+                    },
+                    "812": {
+                        "name": "\u092a\u0924\u094d\u0930 \u0932\u0947\u0916\u0928",
+                        "count": "1"
+                    },
+                    "505": {
+                        "name": "\u0935\u093f\u0936\u0947\u0937\u0923",
+                        "count": "1"
+                    },
+                    "503": {
+                        "name": "\u0938\u0902\u091c\u094d\u091e\u093e",
+                        "count": "1"
+                    },
+                    "813": {
+                        "name": "\u0938\u092e\u093e\u0938",
+                        "count": "1"
+                    },
+                    "504": {
+                        "name": "\u0938\u0902\u091c\u094d\u091e\u093e \u0915\u0947 \u092a\u094d\u0930\u0915\u093e\u0930",
+                        "count": "1"
+                    },
+                    "811": {
+                        "name": "\u0938\u0930\u094d\u0935\u0928\u093e\u092e",
+                        "count": "1"
+                    }
+                }
+            },
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Language - Hindi",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    },
+    "75": {
+        "name": "Chemistry",
+        "branches": {
+            "12": {
+                "name": "Class 9",
+                "simulations": {
+                    "88": {
+                        "name": "Rutherford's Scattering Experiment",
+                        "count": "1"
+                    },
+                    "92": {
+                        "name": "Exothermic and Endothermic Reactions",
+                        "count": "1"
+                    },
+                    "94": {
+                        "name": "Modern periodic table",
+                        "count": "1"
+                    }
+                }
+            }
+        }
+    },
+    "108": {
+        "name": "Social Science - Civics",
+        "branches": {
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Social Science - Civics",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "83": {
+                "name": "Class 7",
+                "simulations": {
+                    "573": {
+                        "name": "Working of state government",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 7",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "78": {
+                "name": "Class 6",
+                "simulations": {
+                    "N/A": {
+                        "name": "Class 6",
+                        "count": "N/A"
+                    },
+                    "520": {
+                        "name": "Gram Panchayat",
+                        "count": "1"
+                    }
+                }
+            }
+        }
+    },
+    "107": {
+        "name": "Social Science - Economics",
+        "branches": {
+            "N/A": {
+                "name": "Unknown Branch",
+                "simulations": {
+                    "N/A": {
+                        "name": "Social Science - Economics",
+                        "count": "N/A"
+                    }
+                }
+            },
+            "80": {
+                "name": "Class 10",
+                "simulations": {
+                    "521": {
+                        "name": "Forms of money",
+                        "count": "1"
+                    },
+                    "N/A": {
+                        "name": "Class 10",
+                        "count": "N/A"
+                    }
+                }
+            }
+        }
+    }
+}
