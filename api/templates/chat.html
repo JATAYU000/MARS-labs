@@ -549,73 +549,7 @@
         <div class="message-container" id="messageContainer">
             <div class="day-divider">
                 <span>Today</span>
-            </div>
-            
-            <div class="message sender-message">
-                <div class="message-text">Hello there!</div>
-                <div class="timestamp">10:01 AM</div>
-                <div class="message-status">
-                    <i class="fas fa-check-double read-receipt"></i>
-                </div>
-            </div>
-            
-            <div class="message receiver-message">
-                <div class="message-text">Hi! How can I help you today?</div>
-                <div class="timestamp">10:02 AM</div>
-            </div>
-            
-            <div class="message sender-message">
-                <div class="message-text">I have a question about your products.</div>
-                <div class="timestamp">10:03 AM</div>
-                <div class="message-status">
-                    <i class="fas fa-check-double read-receipt"></i>
-                </div>
-            </div>
-            
-            <div class="message receiver-message">
-                <div class="message-text">Sure, feel free to ask! I'm here to help you find the right solution for your needs.</div>
-                <div class="timestamp">10:03 AM</div>
-            </div>
-            
-            <div class="message sender-message">
-                <div class="message-text">Do you have any recommendations for beginners?</div>
-                <div class="timestamp">10:05 AM</div>
-                <div class="message-status">
-                    <i class="fas fa-check-double read-receipt"></i>
-                </div>
-            </div>
-            
-            <div class="message receiver-message">
-                <div class="message-text">Absolutely! For beginners, I'd recommend starting with our starter kit. It comes with everything you need to get started.</div>
-                <div class="timestamp">10:06 AM</div>
-            </div>
-            
-            <div class="message sender-message">
-                <div class="message-text">That sounds perfect! How much does it cost?</div>
-                <div class="timestamp">10:08 AM</div>
-                <div class="message-status">
-                    <i class="fas fa-check-double read-receipt"></i>
-                </div>
-            </div>
-            
-            <div class="message receiver-message">
-                <div class="message-text">The starter kit is priced at $49.99, but we're running a limited-time promotion right now that brings it down to $39.99.</div>
-                <div class="timestamp">10:09 AM</div>
-            </div>
-            
-            <div class="message sender-message">
-                <div class="message-text">Great! One more question - does it come with a warranty?</div>
-                <div class="timestamp">10:12 AM</div>
-                <div class="message-status">
-                    <i class="fas fa-check-double read-receipt"></i>
-                </div>
-            </div>
-            
-            <div class="message receiver-message">
-                <div class="message-text">Yes, all our products come with a 1-year manufacturer warranty. You can also purchase an extended 3-year warranty for an additional $15.</div>
-                <div class="timestamp">10:13 AM</div>
-            </div>
-            
+            </div>               
             
         </div>
         <div>
@@ -996,9 +930,35 @@
                 const message = messageInput.value.trim();
                 
                 if (message) {
+                    // Add the user message to the UI
                     addMessage(message, true);
                     messageInput.value = '';
-                    simulateBotResponse();
+                    
+                    // Show typing indicator
+                    typingIndicator.style.display = 'flex';
+                    scrollToBottom();
+                    
+                    // Send message to backend
+                    fetch('/ask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Hide typing indicator
+                        typingIndicator.style.display = 'none';
+                        
+                        // Add the response to the UI
+                        addMessage(data.response, false);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        typingIndicator.style.display = 'none';
+                        addMessage("Sorry, there was an error processing your request.", false);
+                    });
                 }
             }
             
