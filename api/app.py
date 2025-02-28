@@ -10,7 +10,7 @@ import uuid
 import chromadb
 import numpy as np
 import google.generativeai as genai
-from sentence_transformers import SentenceTransformer
+#from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv 
 
 # RAG imports
