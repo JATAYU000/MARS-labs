@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Progress Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #adadad;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .subject-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .subject-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .subject-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .progress-circle-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+        }
+        
+        .progress-circle {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        
+        .progress-circle-bg {
+            fill: none;
+            stroke: #e6e6e6;
+            stroke-width: 10;
+        }
+        
+        .progress-circle-fill {
+            fill: none;
+            stroke: #d10448;
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.5s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .simulation-count {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal {
+            background-color: white;
+            width: 800px;
+            height: 600px;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .simulation-item {
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .simulation-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .task-progress {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .task-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .task-complete {
+            background-color: #4CAF50;
+        }
+        
+        .task-incomplete {
+            background-color: #F44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Subject Progress Dashboard</h1>
+        <div class="subject-grid" id="subjectGrid"></div>
+    </div>
+    
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Subject Details</h2>
+                <button class="close-button" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-content" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Subject data
+        const subjectData = {
+    "0": {
+        "id" : "80",
+        "name": "Mathematics",
+        "simulations": {
+                    "0": {
+                        "id":"564",
+                        "name": "Solution of a quadratic equation",
+                        "progress": {
+                    "Quiz":"True",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"True"
+                }
+                    },
+                    "1": {
+                        "id":"171",
+                        "name": "Tangents drawn from an external point",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"True"
+                }
+                    },
+                    "2": {
+                        "id":"568",
+                        "name": "Ogive (more than type)",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"True"
+                }
+                    },
+                    "3": {
+                        "id":"357",
+                        "name": "Surface area and the volume of a frustum of a cone",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "4": {
+                        "id":"248",
+                        "name": "Right circular cone",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "5": {
+                        "id":"160",
+                        "name": "Surface area of a sphere",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "6": {
+                        "id":"562",
+                        "name": "Ogive (less than type)",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "7": {
+                        "id":"567",
+                        "name": "Height of a building using a clinometer",
+                        "progress": {
+                    "Quiz":"True",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "8": {
+                        "id":"245",
+                        "name": "Right circular cylinder",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "9": {
+                        "id":"163",
+                        "name": "Volume of right circular cylinder",
+                        "progress": {
+                    "Quiz":"True",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"False"
+                }
+                    },
+                    "10": {
+                        "id":"565",
+                        "name": "Section formula",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "11": {
+                        "id":"158",
+                        "name": "Pythagoras theorem",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "12": {
+                        "id":"561",
+                        "name": "Experimental and theoretical probability",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "13": {
+                        "id":"165",
+                        "name": "Volume of a sphere",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "14": {
+                        "id":"558",
+                        "name": "Sum of the first n-even natural numbers",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "15": {
+                        "id":"559",
+                        "name": "To construct an open box of maximum volume",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "16": {
+                        "id":"161",
+                        "name": "Surface area of a cylinder",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "17": {
+                        "id":"566",
+                        "name": "Sum of the first n-natural numbers",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "18": {
+                        "id":"261",
+                        "name": "Tangent - Radius Property",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "19": {
+                        "id":"214",
+                        "name": "Angles in the same segment",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "20": {
+                        "id":"164",
+                        "name": "Volume of right circular cone",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "21": {
+                        "id":"162",
+                        "name": "Angle at the centre of a circle by an arc",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "22": {
+                        "id":"167",
+                        "name": "Arithmetic progression",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "23": {
+                        "id":"560",
+                        "name": "Ratio of areas of two similar triangles",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "24": {
+                        "id":"642",
+                        "name": "Relationship between areas and sides of similar triangles",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "25": {
+                        "id":"563",
+                        "name": "Thales Theorem",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    }
+                }
+            },
+    "1": {
+                "name":"Social Science - Geography",
+                "id":"102",
+                "simulations": {
+                    "0": {
+                        "id":"527",
+                        "name": "Major sea ports in India",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"False",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "1": {
+                        "id":"581",
+                        "name": "Major dams in India",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"False",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "2": {
+                        "id":"612",
+                        "name": "Major crops and cultivation",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "3": {
+                        "id":"582",
+                        "name": "Major soil types",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "4": {
+                        "id":"582",
+                        "name": "Major international airports in India",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "5": {
+                        "id":"584",
+                        "name": "Classification of minerals",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+                    },
+                    "6": {
+                        "id":"584",
+                        "name": "Distribution of minerals",
+                        "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"False"
+                }
+                    }
+                }
+            },
+    "2": {
+        "id":"79",
+        "name":"Biology",
+        "simulations": {
+            "0": {
+                "id":"123",
+                "name": "Imbibition by Raisins",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "1": {
+                "id":"137",
+                "name": "Demonstration of Stomata on a Leaf Peel",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "2": {
+                "id":"135",
+                "name": "Embryo of Dicot Seeds",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "3": {
+                "id":"134",
+                "name": "Asexual Reproduction in Amoeba and  Yeast",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "4": {
+                "id":"390",
+                "name": "Liberation of Carbon Dioxide gas during Fermentation",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "5": {
+                "id":"136",
+                "name": "Role of Carbon Dioxide during Respiration",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "6": {
+                "id":"132",
+                "name": "Homology and Analogy",
+                "progress": {
+                    "Quiz":"True",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "7": {
+                "id":"545",
+                "name": "Carbon dioxide is essential for Photosynthesis",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "8": {
+                "id":"600",
+                "name": "Vegetative Propagation in Potato, Bryophyllum and Aquatic Plant",
+                "progress": {
+                    "Quiz":"True",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "9": {
+                "id":"126",
+                "name": "Importance of Light in Photosynthesis",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"False"
+                }
+            },
+            "10": {
+                "id":"315",
+                "name": "Study of Phototropism and Geotropism in Plants",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            }
+        }
+    },
+    "3": {"id":"73",
+        "name":"Chemistry",
+            "simulations": {
+            "0": {
+                "id":"269",
+                "name": "Reactions of NaOH with Aluminium Metal and HCl",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "1": {
+                "id":"392",
+                "name": "Show that Acids, Bases, and Salts are Electrolytes",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "2": {
+                "id":"270",
+                "name": "Identify Bleaching Powder among the given Samples of Chemicals",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "3": {
+                "id":"533",
+                "name": "To Identify Washing soda or Baking soda among given Samples of Chemicals",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "4": {
+                "id":"59",
+                "name": "To Study the Relative Reactivity of Metals using Salt Solution",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "5": {
+                "id":"283",
+                "name": "Compare the Foaming Capacity of Different Samples of Soap",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "6": {
+                "id":"304",
+                "name": "Measure the change in Temperature during Chemical Reactions",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"True"
+                }
+            },
+            "7": {
+                "id":"119",
+                "name": "Saponification-The process of Making Soap",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "8": {
+                "id":"280",
+                "name": "Esterification Reaction between Alcohol and Carboxylic Acid",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"False"
+                }
+            },
+            "9": {
+                "id":"80",
+                "name": "Decomposition Reaction",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "10": {
+                "id":"284",
+                "name": "Prepare Sulphur Dioxide Gas and Study its Physical and Chemical Properties",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "11": {
+                "id":"81",
+                "name": "Single Displacement Reaction",
+                "progress": {
+                    "Quiz":"True",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "12": {
+                "id":"11",
+                "name": "Properties of Acetic Acid (Ethanoic Acid)",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "13": {
+                "id":"78",
+                "name": "Determine pH with pH indicator strips / universal indicator solution",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "14": {
+                "id":"79",
+                "name": "Combination Reaction",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "15": {
+                "id":"272",
+                "name": "Crystals of copper sulphate contain water of crystallization",
+                "progress": {
+                    "Quiz":"True",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"True"
+                }
+            },
+            "16": {
+                "id":"279",
+                "name": "Oxidation Reactions of Alcohol",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"True"
+                }
+            },
+            "17": {
+                "id":"6",
+                "name": "Properties of Acids and Bases",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "18": {
+                "id":"120",
+                "name": "Cleaning Capacity of Soap with Hard and Soft Water",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "19": {
+                "id":"82",
+                "name": "Double Displacement Reaction",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "20": {
+                "id":"439",
+                "name": "Reaction of Metals with Water Under Different Temperature Conditions",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            }
+        }
+    },
+    "4": {
+        "id":"1",
+        "name":"Physics",
+        "simulations": {
+            "0": {
+                "id":"277",
+                "name": "Convex Lens Focal Length",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "1": {
+                "id":"596",
+                "name": "Verify Laws of Reflection Using a Plane Mirror",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "2": {
+                "id":"99",
+                "name": "Ohm's Law",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"False"
+                }
+            },
+            "3": {
+                "id":"41",
+                "name": "Equivalent Resistance of Resistors (Parallel)",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"True"
+                }
+            },
+            "4": {
+                "id":"40",
+                "name": "Equivalent Resistance of Resistors (Series)",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            },
+            "5": {
+                "id":"278",
+                "name": "Convex Lens - Image Formation and Magnification",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"False",
+                    "Simulation":"False"
+                }
+            }
+        }
+    },
+    "5": {
+        "id":"112",
+        "name":"3-D",
+        "simulations": {
+            "0": {
+                "id":"666",
+                "name": "Vegetative Propagation in Potato, Bryophyllum and Aquatic Plant",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"True"
+                }
+            }
+        }
+    },
+    "6": {
+        "id":"107",
+        "name":"Social Science - Economics",
+        "simulations": {
+            "0": {
+                "id":"521",
+                "name": "Forms of money",
+                "progress": {
+                    "Quiz":"False",
+                    "Procedure":"True",
+                    "Animation":"True",
+                    "Simulation":"False"
+                }
+            }
+        }
+    }
+};
+
+
+        // Function to calculate progress percentage for a subject
+        function calculateSubjectProgress(subject) {
+            let totalTasks = 0;
+            let completedTasks = 0;
+            
+            // Loop through all simulations in the subject
+            const simulations = subject.simulations;
+            for (const simKey in simulations) {
+                const simulation = simulations[simKey];
+                const progress = simulation.progress;
+                
+                // Count tasks in each simulation
+                for (const task in progress) {
+                    totalTasks++;
+                    if (progress[task] === "True") {
+                        completedTasks++;
+                    }
+                }
+            }
+            
+            if (totalTasks === 0) return 0;
+            return Math.round((completedTasks / totalTasks) * 100);
+        }
+
+        // Function to create subject boxes
+        function createSubjectBoxes() {
+            const subjectGrid = document.getElementById('subjectGrid');
+            
+            for (const subjectKey in subjectData) {
+                const subject = subjectData[subjectKey];
+                const progressPercentage = calculateSubjectProgress(subject);
+                const simulationCount = Object.keys(subject.simulations).length;
+                
+                // Create subject box
+                const subjectBox = document.createElement('div');
+                subjectBox.className = 'subject-box';
+                subjectBox.setAttribute('data-subject-key', subjectKey);
+                
+                // Calculate circle parameters
+                const radius = 55;
+                const circumference = 2 * Math.PI * radius;
+                const dashArray = (progressPercentage / 100) * circumference;
+                
+                // Create the HTML content
+                subjectBox.innerHTML = `
+                    <div class="subject-name">${subject.name}</div>
+                    <div class="progress-circle-container">
+                        <svg class="progress-circle" viewBox="0 0 120 120">
+                            <circle class="progress-circle-bg" cx="60" cy="60" r="${radius}"/>
+                            <circle class="progress-circle-fill" cx="60" cy="60" r="${radius}" 
+                                    stroke-dasharray="${dashArray} ${circumference}"/>
+                        </svg>
+                        <div class="progress-text">${progressPercentage}%</div>
+                    </div>
+                    <div class="simulation-count">${simulationCount} simulations</div>
+                `;
+                
+                // Add click event
+                subjectBox.addEventListener('click', () => openModal(subject));
+                
+                // Add to grid
+                subjectGrid.appendChild(subjectBox);
+            }
+        }
+
+        // Function to open modal with subject details
+        function openModal(subject) {
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            
+            // Set modal title
+            modalTitle.textContent = subject.name;
+            
+            // Create content for each simulation
+            let contentHTML = '';
+            
+            for (const simKey in subject.simulations) {
+                const simulation = subject.simulations[simKey];
+                const progress = simulation.progress;
+                
+                contentHTML += `
+                    <div class="simulation-item">
+                        <div class="simulation-name">${simulation.name}</div>
+                        <div class="task-progress">
+                `;
+                
+                // Add task items
+                for (const task in progress) {
+                    const isComplete = progress[task] === "True";
+                    contentHTML += `
+                        <div class="task-item">
+                            <div class="task-indicator ${isComplete ? 'task-complete' : 'task-incomplete'}"></div>
+                            ${task}
+                        </div>
+                    `;
+                }
+                
+                contentHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Update modal content
+            modalContent.innerHTML = contentHTML;
+            
+            // Show modal
+            modalOverlay.style.display = 'flex';
+        }
+
+        // Function to close modal
+        function closeModal() {
+            const modalOverlay = document.getElementById('modalOverlay');
+            modalOverlay.style.display = 'none';
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            createSubjectBoxes();
+            
+            // Add close button event
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+        });
+    </script>
+</body>
+</html>
