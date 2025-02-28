@@ -94,7 +94,14 @@ def create():
     db.session.add(data)
     db.session.commit()
 
-    return jsonify({'message' : 'success'})
+@app.route('api/ask',methods = ['POST'])
+def ask():
+    data = request.get_json()
+    response = Chatbot.res(data['question'])
+    return jsonify({'answer' : response})
+
+
+
 
 with app.app_context():
     db.create_all()
