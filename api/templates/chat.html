@@ -316,55 +316,7 @@
         .input-container button:active {
             transform: scale(0.97);
         }
-        
-        .emoji-picker {
-            position: absolute;
-            bottom: 10px;
-            left: 32px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            width: 250px;
-            display: none;
-            z-index: 100;
-        }
-        
-        .emoji-categories {
-            display: flex;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-            margin-bottom: 8px;
-        }
-        
-        .emoji-category {
-            padding: 5px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        
-        .emoji-list {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 5px;
-            height: 150px;
-            overflow-y: auto;
-        }
-        
-        .emoji {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-        }
-        
-        .emoji:hover {
-            background-color: #f0f0f0;
-        }
+       
         
         /* Scrollbar styling */
         .message-container::-webkit-scrollbar {
@@ -490,6 +442,72 @@
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
+        
+        /* Voice recording modal */
+        .recording-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .recording-container {
+            background-color: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .recording-status {
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .recording-indicator {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #d10448;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .recording-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .recording-buttons button {
+            padding: 10px 20px;
+            border-radius: 24px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .cancel-button {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .stop-button {
+            background-color: #d10448;
+            color: white;
+        }
     </style>
     <title>Chat UI</title>
 </head>
@@ -500,7 +518,7 @@
                 <img src="../static/images/bot.png" height="30px" width="45px" alt="Bot" id="avatarImage">
             </div>
             <div class="chat-info">
-                <h2 id="botName">MARTIAN PRODIGY</h2>
+                <h2 id="botName">OLLAMA</h2>
                 <p><span class="status-indicator"></span>Online</p>
             </div>
             <div class="header-actions">
@@ -517,31 +535,22 @@
         </div>
         
         <div class="model-selection" id="modelSelection">
-            <div class="model-option" data-model="martian" data-image="../static/images/bot.png" data-name="MARTIAN PRODIGY">
+            <div class="model-option" data-model="martian" data-image="../static/images/bot3.png" data-name="OLLAMA">
                 <div class="model-avatar">
-                    <img src="../static/images/bot.png" alt="Martian">
+                    <img src="../static/images/bot3.png" alt="Martian">
                 </div>
                 <div class="model-info">
-                    <div class="model-name">MARTIAN PRODIGY</div>
-                    <div class="model-description">Space exploration expert</div>
+                    <div class="model-name">OLLAMA</div>
+                    <div class="model-description">Advanced RAG based</div>
                 </div>
             </div>
-            <div class="model-option" data-model="earth" data-image="../static/images/bot2.png" data-name="EARTH GUARDIAN">
+            <div class="model-option" data-model="earth" data-image="../static/images/bot2.png" data-name="GEMINI">
                 <div class="model-avatar">
                     <img src="../static/images/bot2.png" alt="Earth">
                 </div>
                 <div class="model-info">
-                    <div class="model-name">EARTH GUARDIAN</div>
-                    <div class="model-description">Environmental specialist</div>
-                </div>
-            </div>
-            <div class="model-option" data-model="quantum" data-image="../static/images/bot3.png" data-name="QUANTUM MIND">
-                <div class="model-avatar">
-                    <img src="../static/images/bot3.png" alt="Quantum">
-                </div>
-                <div class="model-info">
-                    <div class="model-name">QUANTUM MIND</div>
-                    <div class="model-description">Physics and math expert</div>
+                    <div class="model-name">GEMINI</div>
+                    <div class="model-description">Finetuned Model</div>
                 </div>
             </div>
         </div>
@@ -564,9 +573,6 @@
         
         <div class="input-container">
             <input type="text" id="messageInput" placeholder="Type your message...">
-            <div class="input-actions">
-                <!-- existing icons here -->
-            </div>
             <button id="audioButton" class="audio-button">
                 <i class="fas fa-microphone"></i>
             </button>
@@ -574,6 +580,20 @@
                 <i class="fas fa-paper-plane"></i>
                 <span>Send</span>
             </button>
+        </div>
+    </div>
+    
+    <div class="recording-modal" id="recordingModal">
+        <div class="recording-container">
+            <div class="recording-indicator">
+                <i class="fas fa-microphone" style="color: white; font-size: 24px;"></i>
+            </div>
+            <div class="recording-status" id="recordingStatus">Listening...</div>
+            <div id="recordingTime">00:00</div>
+            <div class="recording-buttons">
+                <button class="cancel-button" id="cancelRecording">Cancel</button>
+                <button class="stop-button" id="stopRecording">Stop</button>
+            </div>
         </div>
     </div>
 
@@ -592,285 +612,185 @@
             const modelSelection = document.getElementById('modelSelection');
             const botName = document.getElementById('botName');
             const avatarImage = document.getElementById('avatarImage');
+            const audioButton = document.getElementById('audioButton');
+            const recordingModal = document.getElementById('recordingModal');
+            const recordingStatus = document.getElementById('recordingStatus');
+            const recordingTime = document.getElementById('recordingTime');
+            const stopRecording = document.getElementById('stopRecording');
+            const cancelRecording = document.getElementById('cancelRecording');
             
-        // Import required libraries
-        // const axios = require("axios").default;
-
-        // // Function to transcribe audio using Eden AI
-        // function transcribeAudio(audioUrl) {
-        // // Show loading state
-        // const transcriptionStatus = document.getElementById('transcription-status');
-        // if (transcriptionStatus) {
-        //     transcriptionStatus.textContent = 'Transcribing...';
-        // }
-        
-        // const options = {
-        //     method: "POST",
-        //     url: "https://api.edenai.run/v2/audio/speech_to_text_async",
-        //     headers: {
-        //     Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjJhZWNjYzgtNGFmYS00ZjAxLTg5MWMtNjBmN2RiYjRhM2I4IiwidHlwZSI6ImFwaV90b2tlbiJ9.ecUNgrrL5z6tjwaRnHsKfLL6efpB_PoxtmIsF32EZ_Q",
-        //     },
-        //     data: {
-        //     providers: "openai",
-        //     language: "en",
-        //     file_url: audioUrl,
-        //     },
-        // };
-
-        // return axios.request(options)
-        //     .then((response) => {
-        //     console.log("Transcription request submitted:", response.data);
-        //     // Return the request ID for checking status
-        //     return response.data;
-        //     })
-        //     .catch((error) => {
-        //     console.error("Transcription request failed:", error);
-        //     if (error.response && error.response.data) {
-        //         console.error("API error details:", error.response.data);
-        //     }
-        //     if (transcriptionStatus) {
-        //         transcriptionStatus.textContent = 'Transcription failed. Please try again.';
-        //     }
-        //     throw error;
-        //     });
-        // }
-
-        // // Function to check the status of an async transcription request
-        // function checkTranscriptionStatus(requestId) {
-        // const statusCheckUrl = `https://api.edenai.run/v2/audio/speech_to_text_async/${requestId}`;
-        
-        // const options = {
-        //     method: "GET",
-        //     url: statusCheckUrl,
-        //     headers: {
-        //     Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjJhZWNjYzgtNGFmYS00ZjAxLTg5MWMtNjBmN2RiYjRhM2I4IiwidHlwZSI6ImFwaV90b2tlbiJ9.ecUNgrrL5z6tjwaRnHsKfLL6efpB_PoxtmIsF32EZ_Q",
-        //     }
-        // };
-
-        // return axios.request(options)
-        //     .then((response) => {
-        //     console.log("Transcription status:", response.data);
-        //     return response.data;
-        //     })
-        //     .catch((error) => {
-        //     console.error("Failed to check transcription status:", error);
-        //     if (error.response && error.response.data) {
-        //         console.error("API error details:", error.response.data);
-        //     }
-        //     throw error;
-        //     });
-        // }
-
-        // // Example of how to use these functions with audio recording
-        // // This assumes you're using MediaRecorder API for recording
-
-        
-                function sendMessage() {
-        const message = messageInput.value.trim();
-
-        if (message) {
-            // Add the user message to the UI
-            addMessage(message, true);
-            messageInput.value = '';
-
-            // Show typing indicator
-            typingIndicator.style.display = 'flex';
-            scrollToBottom();
-
-            // Send message to backend
-            fetch('/ask', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: message }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Hide typing indicator
-                typingIndicator.style.display = 'none';
-
-                // Add the response to the UI
-                addMessage(data.response, false);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                typingIndicator.style.display = 'none';
-                addMessage("Sorry, there was an error processing your request.", false);
-            });
-        }
-        }
-
-        let mediaRecorder;
-        let audioChunks = [];
-        let audioBlob = null;
-        let audioUrl = null;
-
-        // Start recording audio
-        function startRecording() {
-        audioChunks = [];
-        
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-            mediaRecorder = new MediaRecorder(stream);
+            let mediaRecorder;
+            let audioChunks = [];
+            let recordingInterval;
+            let recordingSeconds = 0;
+            const API_KEY = "600ae542311c4e9383297b9539656e91";
             
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                audioChunks.push(event.data);
+            audioButton.addEventListener('click', startRecording);
+            stopRecording.addEventListener('click', endRecording);
+            cancelRecording.addEventListener('click', cancelAudioRecording);
+            
+            async function startRecording() {
+                try {
+                    let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+                    audioChunks = [];
+                    mediaRecorder.start();
+                    audioButton.classList.add('recording');
+                    recordingModal.style.display = 'flex';
+                    
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+                    
+                    recordingSeconds = 0;
+                    updateRecordingTime();
+                    recordingInterval = setInterval(updateRecordingTime, 1000);
+                    
+                    mediaRecorder.onstop = processAudio;
+                    
+                } catch (error) {
+                    console.error("Error accessing microphone:", error);
+                    addMessage("Could not access microphone. Please check your permissions.", false);
                 }
-            };
-            
-            mediaRecorder.onstop = () => {
-                audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                uploadAndTranscribe(audioBlob);
-            };
-            
-            mediaRecorder.onerror = (event) => {
-                console.error('Media recorder error:', event.error);
-                stopRecording();
-            };
-            
-            mediaRecorder.start();
-            console.log("Recording started");
-            
-            // Update UI to show recording state
-            const recordButton = document.getElementById('record-button');
-            if (recordButton) {
-                recordButton.textContent = 'Stop Recording';
-            }
-            })
-            .catch(error => {
-            console.error('Error accessing microphone:', error);
-            });
-        }
-
-        // Stop recording audio
-        function stopRecording() {
-        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-            mediaRecorder.stop();
-            console.log("Recording stopped");
-            
-            // Stop all audio tracks
-            if (mediaRecorder.stream) {
-            mediaRecorder.stream.getTracks().forEach(track => track.stop());
             }
             
-            // Update UI to show stopped state
-            const recordButton = document.getElementById('record-button');
-            if (recordButton) {
-            recordButton.textContent = 'Start Recording';
+            function updateRecordingTime() {
+                recordingSeconds++;
+                const minutes = Math.floor(recordingSeconds / 60).toString().padStart(2, '0');
+                const seconds = (recordingSeconds % 60).toString().padStart(2, '0');
+                recordingTime.textContent = `${minutes}:${seconds}`;
+                if (recordingSeconds >= 120) {
+                    endRecording();
+                }
             }
-        }
-        }
-
-        // Upload the audio file and get a URL
-        function uploadAndTranscribe(audioBlob) {
-        // In a real implementation, you'd upload the audioBlob to your server or a cloud storage service
-        // and get back a publicly accessible URL
-        
-        // For this example, let's assume we have a function that uploads and returns a URL
-        uploadAudioFile(audioBlob)
-            .then(url => {
-            console.log("Audio uploaded at:", url);
             
-            // Now use Eden AI to transcribe the audio
-            return transcribeAudio(url);
-            })
-            .then(response => {
-            // Start polling for results
-            const requestId = response.request_id;
-            pollForTranscriptionResults(requestId);
-            })
-            .catch(error => {
-            console.error("Error in upload and transcribe process:", error);
-            });
-        }
-
-        // Example function to upload audio file (you would need to implement this)
-        function uploadAudioFile(blob) {
-        // This is a placeholder for where you'd implement your own file upload logic
-        // to a service like AWS S3, Google Cloud Storage, or your own server
-        
-        // For testing purposes, you could use a service like MockAPI or create a FormData
-        // and use axios to post it to your server
-        
-        return new Promise((resolve, reject) => {
-            // Simulate upload delay
-            setTimeout(() => {
-            // This would be replaced with the actual URL returned from your upload service
-            resolve("https://your-storage-service.com/path/to/uploaded/audio.wav");
-            }, 1500);
-        });
-        }
-
-        // Poll for transcription results until complete
-        function pollForTranscriptionResults(requestId, interval = 5000) {
-        const poll = setInterval(() => {
-            checkTranscriptionStatus(requestId)
-            .then(status => {
-                if (status.status === "finished") {
-                clearInterval(poll);
-                displayTranscriptionResults(status.results);
-                } else if (status.status === "failed") {
-                clearInterval(poll);
-                console.error("Transcription failed:", status.error);
+            function endRecording() {
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                    clearInterval(recordingInterval);
+                    recordingStatus.textContent = "Processing...";
+                }
+            }
+            
+            function cancelAudioRecording() {
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
                 
-                // Update UI to show error
-                const transcriptionStatus = document.getElementById('transcription-status');
-                if (transcriptionStatus) {
-                    transcriptionStatus.textContent = 'Transcription failed: ' + status.error;
+                clearInterval(recordingInterval);
+                audioButton.classList.remove('recording');
+                recordingModal.style.display = 'none';
+                audioChunks = [];
+            }
+            
+            async function processAudio() {
+                try {
+                    const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+                    recordingStatus.textContent = "Uploading audio...";
+                    const uploadUrl = await uploadAudio(audioBlob);
+                    
+                    recordingStatus.textContent = "Transcribing...";
+                    const transcription = await transcribeAudio(uploadUrl);
+                    audioButton.classList.remove('recording');
+                    recordingModal.style.display = 'none';
+                    if (transcription) {
+                        messageInput.value = transcription;
+                        messageInput.focus();
+                    } else {
+                        addMessage("Sorry, I couldn't understand the audio. Please try again.", false);
+                    }
+                    
+                } catch (error) {
+                    console.error("Error processing audio:", error);
+                    recordingStatus.textContent = "Error processing audio";
+                    setTimeout(() => {
+                        audioButton.classList.remove('recording');
+                        recordingModal.style.display = 'none';
+                    }, 2000);
+                    
+                    addMessage("Sorry, there was an error processing your audio.", false);
                 }
+            }
+            
+            async function uploadAudio(audioBlob) {
+                let response = await fetch("https://api.assemblyai.com/v2/upload", {
+                    method: "POST",
+                    headers: { "authorization": API_KEY },
+                    body: audioBlob,
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
                 }
-                // Continue polling if status is "pending" or "running"
-            })
-            .catch(error => {
-                clearInterval(poll);
-                console.error("Error checking transcription status:", error);
-            });
-        }, interval);
-        }
+                
+                let data = await response.json();
+                return data.upload_url;
+            }
+            
+            async function transcribeAudio(audioUrl) {
+                let response = await fetch("https://api.assemblyai.com/v2/transcript", {
+                    method: "POST",
+                    headers: {
+                        "authorization": API_KEY,
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify({ audio_url: audioUrl })
+                });
+                
+                let data = await response.json();
+                let transcriptId = data.id;
+                
+                if (!transcriptId) {
+                    throw new Error("Failed to initiate transcription");
+                }
+                
+                let transcriptUrl = `https://api.assemblyai.com/v2/transcript/${transcriptId}`;
+                
+                while (true) {
+                    let transcriptResponse = await fetch(transcriptUrl, {
+                        headers: { "authorization": API_KEY }
+                    });
+                    
+                    let transcriptData = await transcriptResponse.json();
+                    
+                    if (transcriptData.status === "completed") {
+                        return transcriptData.text;
+                    } else if (transcriptData.status === "failed") {
+                        throw new Error("Transcription failed");
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            }
+            
+            function sendMessage() {
+                const message = messageInput.value.trim();
 
-        // Display the transcription results
-        function displayTranscriptionResults(results) {
-        console.log("Transcription complete:", results);
-        
-        // Example: Display results from different providers
-        const transcriptionOutput = document.getElementById('transcription-output');
-        if (transcriptionOutput) {
-            let outputHtml = '<h3>Transcription Results</h3>';
-            
-            for (const provider in results) {
-            outputHtml += `<h4>${provider}</h4>`;
-            outputHtml += `<p>${results[provider].text}</p>`;
-            
-            if (results[provider].confidence) {
-                outputHtml += `<p>Confidence: ${(results[provider].confidence * 100).toFixed(2)}%</p>`;
-            }
-            }
-            
-            transcriptionOutput.innerHTML = outputHtml;
-        }
-        
-        // Update status
-        const transcriptionStatus = document.getElementById('transcription-status');
-        if (transcriptionStatus) {
-            transcriptionStatus.textContent = 'Transcription complete';
-        }
-        }
+                if (message) {
+                    addMessage(message, true);
+                    messageInput.value = '';
+                    typingIndicator.style.display = 'flex';
+                    scrollToBottom();
+                    console.log(botName.textContent)
+                    fetch('/ask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message, model: botName.textContent }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        typingIndicator.style.display = 'none';
 
-        // Example of how to wire these functions to UI elements
-        document.addEventListener('DOMContentLoaded', () => {
-        const recordButton = document.getElementById('record-button');
-        if (recordButton) {
-            recordButton.addEventListener('click', () => {
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                stopRecording();
-            } else {
-                startRecording();
+                        addMessage(data.response, false);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        typingIndicator.style.display = 'none';
+                        addMessage("Sorry, there was an error processing your request.", false);
+                    });
+                }
             }
-            });
-        }
-        });
 
             const botResponses = {
                 'martian': [
@@ -913,7 +833,6 @@
                 messageDiv.appendChild(messageText);
                 messageDiv.appendChild(timestamp);
                 
-                // Add read receipts for sender messages
                 if (isSender) {
                     const messageStatus = document.createElement('div');
                     messageStatus.className = "message-status";
@@ -967,28 +886,22 @@
                 const message = messageInput.value.trim();
                 
                 if (message) {
-                    // Add the user message to the UI
                     addMessage(message, true);
                     messageInput.value = '';
                     
-                    // Show typing indicator
                     typingIndicator.style.display = 'flex';
                     scrollToBottom();
-                    
-                    // Send message to backend
+                    console.log(botName.textContent)
                     fetch('/ask', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ message: message }),
+                        body: JSON.stringify({ message: message, model: botName.textContent }),
                     })
                     .then(response => response.json())
                     .then(data => {
-                        // Hide typing indicator
                         typingIndicator.style.display = 'none';
-                        
-                        // Add the response to the UI
                         addMessage(data.response, false);
                     })
                     .catch(error => {
@@ -998,40 +911,27 @@
                     });
                 }
             }
-            
-            // Avatar click to show model selection
             avatarButton.addEventListener('click', function() {
                 modelSelection.classList.toggle('active');
             });
-            
-            // Handle model selection
             document.querySelectorAll('.model-option').forEach(option => {
                 option.addEventListener('click', function() {
                     const model = this.getAttribute('data-model');
                     const imageSrc = this.getAttribute('data-image');
                     const name = this.getAttribute('data-name');
                     
-                    // Update the current model
                     currentModel = model;
-                    
-                    // Update the UI
                     avatarImage.src = imageSrc;
                     botName.textContent = name;
-                    
-                    // Add a system message
                     addMessage(`You are now chatting with ${name}`, false);
-                    
-                    // Close the model selection
                     modelSelection.classList.remove('active');
                 });
             });
             
-            // Dropdown menu toggling
             menuButton.addEventListener('click', function() {
                 dropdownMenu.classList.toggle('active');
             });
             
-            // Handle dropdown menu option clicks
             optionA.addEventListener('click', function() {
                 addMessage("You selected Option A", false);
                 dropdownMenu.classList.remove('active');
@@ -1047,7 +947,6 @@
                 dropdownMenu.classList.remove('active');
             });
             
-            // Close menus when clicking outside
             document.addEventListener('click', function(e) {
                 if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
                     dropdownMenu.classList.remove('active');
@@ -1058,7 +957,6 @@
                 }
             });
             
-            // Search icon functionality
             document.querySelector('.fa-search').addEventListener('click', function() {
                 alert('Search feature would open here');
             });
