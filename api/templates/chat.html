@@ -832,12 +832,18 @@
                 
                 const messageText = document.createElement('div');
                 messageText.className = "message-text";
-                messageText.textContent = text;
+                
+                // Apply markdown parsing only for receiver messages
+                if (!isSender) {
+                    messageText.innerHTML = marked.parse(text);
+                } else {
+                    messageText.textContent = text;
+                }
                 
                 const timestamp = document.createElement('div');
                 timestamp.className = "timestamp";
                 timestamp.textContent = getCurrentTime();
-            
+
                 messageDiv.appendChild(messageText);
                 messageDiv.appendChild(timestamp);
                 
