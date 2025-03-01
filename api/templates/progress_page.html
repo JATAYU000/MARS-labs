@@ -226,10 +226,201 @@
     gap: 15px;
     padding: 20px;
 }
+/* Add these styles to your existing CSS */
+
+/* User icon and drawer styles */
+.user-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #3498db;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.user-icon:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+.user-drawer {
+  position: absolute;
+  top: 50px;
+  right: -300px;
+  width: 280px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.user-drawer.open {
+  right: 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.close-drawer {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #777;
+}
+
+.user-info {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.avatar {
+  font-size: 40px;
+  color: #3498db;
+  margin-right: 15px;
+}
+
+.user-details h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.user-details p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.user-stats {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.stat-item {
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-label {
+  color: #777;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #333;
+}
+
+.drawer-actions {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawer-actions button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawer-actions button i {
+  margin-right: 8px;
+}
+
+.settings-btn {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.settings-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
 
     </style>
 </head>
 <body>
+    <!-- User Icon and Drawer -->
+<div class="user-container">
+    <div class="user-icon" id="userIcon">
+      <i class="fas fa-user"></i>
+    </div>
+    <div class="user-drawer" id="userDrawer">
+      <div class="drawer-header">
+        <h3>User Profile</h3>
+        <button class="close-drawer" id="closeDrawer">&times;</button>
+      </div>
+      <div class="user-info">
+        <div class="avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <h4 id="userName">John Doe</h4>
+          <p id="userEmail">john.doe@example.com</p>
+        </div>
+      </div>
+      <div class="user-stats">
+        <div class="stat-item">
+          <span class="stat-label">Class:</span>
+          <span class="stat-value" id="userClass">Advanced</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Subjects:</span>
+          <span class="stat-value" id="subjectCount">5</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Progress:</span>
+          <span class="stat-value" id="userProgress">68%</span>
+        </div>
+      </div>
+      <div class="drawer-actions">
+        <button class="settings-btn"><i class="fas fa-cog"></i> Settings</button>
+        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </div>
+  </div>
     <h1>Subject Progress Dashboard</h1>
     <div class="recommendation-bar" id="recommendationBar">Loading recommendations...</div>
 
@@ -1022,9 +1213,51 @@
         }
     }
 };
+document.addEventListener('DOMContentLoaded', function() {
+    const userIcon = document.getElementById('userIcon');
+    const userDrawer = document.getElementById('userDrawer');
+    const closeDrawer = document.getElementById('closeDrawer');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    // Function to toggle drawer
+    userIcon.addEventListener('click', function() {
+      userDrawer.classList.toggle('open');
+    });
+    
+    closeDrawer.addEventListener('click', function() {
+      userDrawer.classList.remove('open');
+    });
+    
+    document.addEventListener('click', function(event) {
+      if (!userDrawer.contains(event.target) && event.target !== userIcon) {
+        userDrawer.classList.remove('open');
+      }
+    });
+    
+    logoutBtn.addEventListener('click', function() {
+      if (confirm('Are you sure you want to logout?')) {
+        alert('Logging out...');
+      }
+    });
+    
+    function loadUserData() {
+      const userData = {
+        name: 'Heisenberg',
+        email: 'walter.white@example.com',
+        class: '10',
+        subjects: 7,
+        progress: '40%'
+      };
+      
+      document.getElementById('userName').textContent = userData.name;
+      document.getElementById('userEmail').textContent = userData.email;
+      document.getElementById('userClass').textContent = userData.class;
+      document.getElementById('subjectCount').textContent = userData.subjects;
+      document.getElementById('userProgress').textContent = userData.progress;
+    }
+    loadUserData();
+  });
 
-
-// Function to calculate subject progress percentage
 function calculateSubjectProgress(subject) {
   let totalTasks = 0, completedTasks = 0;
   Object.values(subject.simulations || {}).forEach(simulation => {
@@ -1177,18 +1410,10 @@ function openModal(subject) {
     contentHTML += `</div></div>`;
   }
 
-  // Generate task recommendations
-  const recommendations = generateTaskRecommendations(subject);
-  let recommendationsHTML = `<div class="task-recommendations">
-    <h3>Suggested Tasks</h3>
-    <ul>${recommendations.map(task => `<li>${task}</li>`).join('')}</ul>
-  </div>`;
 
-  modalContent.innerHTML = contentHTML + recommendationsHTML;
+  modalContent.innerHTML = contentHTML;
   modalOverlay.style.display = 'flex';
   
-  // For debugging
-  console.log("Recommendations generated:", recommendations);
 }
 
 // Function to close modal
