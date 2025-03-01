@@ -169,13 +169,25 @@ class Mentor:
     def generate_answer_with_gemini(self, query, context):
         """Generate an answer using Gemini with NCERT context."""
         prompt = f"""
-        Use the retrieved NCERT content to answer the question.
+            You are an expert mentor providing personalized guidance based on the following context. 
 
-        Question: {query}
+            CONTEXT: {context}
 
-        Retrieved Context:
-        {context}
-        """
+            USER QUERY: {query}
+
+            INSTRUCTIONS:
+            1. Prioritize information from the provided context, but supplement with general knowledge when necessary.
+            2. Deliver concise but sufficiently explanatory, factually accurate responses with examples(if available) that directly address the query.
+            3. Do not mention the text, if it is from the text or outside the text, just give the response and don't specify whether it is form the text or outside.
+            4. Consider the chat history (included in the query) to personalize your guidance.
+            5. Maintain a supportive, encouraging tone throughout.
+            6. If the user's input is not in English, respond in the same language.
+            7. If chat history shows a model switch occurred, adjust your response style accordingly.
+            8. Remember this is a RAG (Retrieval-Augmented Generation) implementation using two models.
+
+            Respond in a clear, helpful manner that builds the user's confidence while providing accurate information.
+            """
+
 
         response = self.model.generate_content(prompt)
         return response.text
@@ -440,7 +452,7 @@ def ask_question():
     user_text = data.get('message', '').strip()
     model_selection = data.get('model')
     user_id = data.get('user_id')
-    chat_history = data.get('messages', [])
+    chat_history = data.get('chat_history', [])
 
     print(data)
 

@@ -30,6 +30,14 @@ Content-Type: application/json
       "phy": {
         "completed_experiments": ["ohms law"],
         "completed_quizzes": ["ohms law"]
+      },
+      "chem": {
+        "completed_experiments": ["Properties of Acids and Bases"],
+        "completed_quizzes": ["Properties of Acids and Bases"]
+      },
+      "math": {
+        "completed_experiments": ["Pythagoras theorem"],
+        "completed_quizzes": ["Pythagoras theorem"]
       }
     }
   }
