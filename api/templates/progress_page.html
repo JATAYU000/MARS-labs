@@ -200,14 +200,43 @@
         .task-incomplete {
             background-color: #F44336;
         }
+
+        .recommendation-bar {
+    position: relative;
+    left: 300px;
+    width: 69%;
+    background-color: #fff;
+    color: black;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.subject-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
     </style>
 </head>
 <body>
+    <h1>Subject Progress Dashboard</h1>
+    <div class="recommendation-bar" id="recommendationBar">Loading recommendations...</div>
+
     <div class="container">
-        <h1>Subject Progress Dashboard</h1>
         <div class="subject-grid" id="subjectGrid"></div>
     </div>
-    
+
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <div class="modal-header">
@@ -995,130 +1024,190 @@
 };
 
 
-        // Function to calculate progress percentage for a subject
-        function calculateSubjectProgress(subject) {
-            let totalTasks = 0;
-            let completedTasks = 0;
-            
-            // Loop through all simulations in the subject
-            const simulations = subject.simulations;
-            for (const simKey in simulations) {
-                const simulation = simulations[simKey];
-                const progress = simulation.progress;
-                
-                // Count tasks in each simulation
-                for (const task in progress) {
-                    totalTasks++;
-                    if (progress[task] === "True") {
-                        completedTasks++;
-                    }
-                }
-            }
-            
-            if (totalTasks === 0) return 0;
-            return Math.round((completedTasks / totalTasks) * 100);
-        }
+// Function to calculate subject progress percentage
+function calculateSubjectProgress(subject) {
+  let totalTasks = 0, completedTasks = 0;
+  Object.values(subject.simulations || {}).forEach(simulation => {
+    Object.entries(simulation.progress || {}).forEach(([task, status]) => {
+      totalTasks++;
+      if (status === "True") completedTasks++;
+    });
+  });
+  return totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+}
 
-        // Function to create subject boxes
-        function createSubjectBoxes() {
-            const subjectGrid = document.getElementById('subjectGrid');
-            
-            for (const subjectKey in subjectData) {
-                const subject = subjectData[subjectKey];
-                const progressPercentage = calculateSubjectProgress(subject);
-                const simulationCount = Object.keys(subject.simulations).length;
-                
-                // Create subject box
-                const subjectBox = document.createElement('div');
-                subjectBox.className = 'subject-box';
-                subjectBox.setAttribute('data-subject-key', subjectKey);
-                
-                // Calculate circle parameters
-                const radius = 55;
-                const circumference = 2 * Math.PI * radius;
-                const dashArray = (progressPercentage / 100) * circumference;
-                
-                // Create the HTML content
-                subjectBox.innerHTML = `
-                    <div class="subject-name">${subject.name}</div>
-                    <div class="progress-circle-container">
-                        <svg class="progress-circle" viewBox="0 0 120 120">
-                            <circle class="progress-circle-bg" cx="60" cy="60" r="${radius}"/>
-                            <circle class="progress-circle-fill" cx="60" cy="60" r="${radius}" 
-                                    stroke-dasharray="${dashArray} ${circumference}"/>
-                        </svg>
-                        <div class="progress-text">${progressPercentage}%</div>
-                    </div>
-                    <div class="simulation-count">${simulationCount} simulations</div>
-                `;
-                
-                // Add click event
-                subjectBox.addEventListener('click', () => openModal(subject));
-                
-                // Add to grid
-                subjectGrid.appendChild(subjectBox);
-            }
-        }
+// Function to generate and display recommendations
+function generateRecommendation() {
+  if (!subjectData || Object.keys(subjectData).length === 0) {
+    console.error("No subjects found in data.");
+    document.getElementById("recommendationBar").innerText = "No data available.";
+    return;
+  }
 
-        // Function to open modal with subject details
-        function openModal(subject) {
-            const modalOverlay = document.getElementById('modalOverlay');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalContent = document.getElementById('modalContent');
-            
-            // Set modal title
-            modalTitle.textContent = subject.name;
-            
-            // Create content for each simulation
-            let contentHTML = '';
-            
-            for (const simKey in subject.simulations) {
-                const simulation = subject.simulations[simKey];
-                const progress = simulation.progress;
-                
-                contentHTML += `
-                    <div class="simulation-item">
-                        <div class="simulation-name">${simulation.name}</div>
-                        <div class="task-progress">
-                `;
-                
-                // Add task items
-                for (const task in progress) {
-                    const isComplete = progress[task] === "True";
-                    contentHTML += `
-                        <div class="task-item">
-                            <div class="task-indicator ${isComplete ? 'task-complete' : 'task-incomplete'}"></div>
-                            ${task}
-                        </div>
-                    `;
-                }
-                
-                contentHTML += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Update modal content
-            modalContent.innerHTML = contentHTML;
-            
-            // Show modal
-            modalOverlay.style.display = 'flex';
-        }
+  const subjects = Object.values(subjectData).map(subject => ({
+    name: subject.name,
+    progress: calculateSubjectProgress(subject),
+    simulations: subject.simulations || {}
+  })).sort((a, b) => a.progress - b.progress);
 
-        // Function to close modal
-        function closeModal() {
-            const modalOverlay = document.getElementById('modalOverlay');
-            modalOverlay.style.display = 'none';
-        }
+  // Find the subject with lowest progress that has simulations
+  const lowestSubject = subjects.find(subject => Object.keys(subject.simulations).length > 0);
+  
+  if (!lowestSubject) {
+    document.getElementById("recommendationBar").innerText = "All subjects completed!";
+    return;
+  }
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            createSubjectBoxes();
-            
-            // Add close button event
-            document.getElementById('closeModal').addEventListener('click', closeModal);
-        });
+  // Collect pending tasks
+  let pendingTasks = [];
+  Object.values(lowestSubject.simulations).forEach(simulation => {
+    Object.entries(simulation.progress || {}).forEach(([task, status]) => {
+      if (status === "False") {
+        pendingTasks.push({ name: task, simulation: simulation.name });
+      }
+    });
+  });
+
+  // Generate recommendation text
+  let topTasks = pendingTasks.slice(0, 3).map(task => `${task.simulation} - ${task.name}`);
+  let recommendationText = topTasks.length > 0
+    ? `Recommandation : Focus on ${lowestSubject.name} (${lowestSubject.progress}%) → Complete: ${topTasks.join(", ")}`
+    : `${lowestSubject.name} is nearly complete!`;
+  
+  document.getElementById("recommendationBar").innerText = recommendationText;
+}
+
+function renderSubjects() {
+  const grid = document.getElementById("subjectGrid");
+  if (!grid) {
+    console.error("Element with ID 'subjectGrid' not found.");
+    return;
+  }
+  
+  grid.innerHTML = "";
+  
+  if (!subjectData || Object.keys(subjectData).length === 0) {
+    grid.innerText = "No subjects available.";
+    return;
+  }
+  
+  Object.values(subjectData).forEach(subject => {
+    const progress = calculateSubjectProgress(subject);
+    const simulationCount = Object.keys(subject.simulations || {}).length;
+    
+    if (simulationCount > 0) {
+      const card = document.createElement("div");
+      card.className = "subject-box";
+      card.setAttribute("data-subject-key", subject.name);
+      
+      card.innerHTML = `
+        <div class="subject-name">${subject.name}</div>
+        <div class="progress-circle-container">
+          <svg class="progress-circle" viewBox="0 0 120 120">
+            <circle class="progress-circle-bg" cx="60" cy="60" r="55"/>
+            <circle class="progress-circle-fill" cx="60" cy="60" r="55"
+                   stroke-dasharray="${(progress / 100) * (2 * Math.PI * 55)} ${2 * Math.PI * 55}"/>
+          </svg>
+          <div class="progress-text">${progress}%</div>
+        </div>
+        <div class="simulation-count">${simulationCount} simulations</div>
+      `;
+      
+      // Add click event to open modal with subject details
+      card.addEventListener('click', () => openModal(subject));
+      
+      grid.appendChild(card);
+    }
+  });
+  
+  // Generate recommendations after rendering subjects
+  generateRecommendation();
+}
+
+// Function to generate task recommendations for a specific subject
+function generateTaskRecommendations(subject) {
+  let recommendations = [];
+
+  for (const simKey in subject.simulations) {
+    const simulation = subject.simulations[simKey];
+    const progress = simulation.progress;
+
+    for (const task in progress) {
+      if (progress[task] === "False") {  // Changed from !== "True" to be more explicit
+        recommendations.push(`${simulation.name}: ${task}`);
+      }
+    }
+  }
+
+  return recommendations.length > 0 ? recommendations.slice(0, 5) : ["All tasks completed!"];
+}
+
+// Function to open modal with subject details
+function openModal(subject) {
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalContent = document.getElementById('modalContent');
+
+  if (!modalOverlay || !modalTitle || !modalContent) {
+    console.error("Modal elements not found in the DOM");
+    return;
+  }
+
+  modalTitle.textContent = subject.name;
+  modalContent.innerHTML = ''; // Clear old content
+
+  let contentHTML = '';
+
+  for (const simKey in subject.simulations) {
+    const simulation = subject.simulations[simKey];
+    const progress = simulation.progress;
+
+    contentHTML += `<div class="simulation-item">
+      <div class="simulation-name">${simulation.name}</div>
+      <div class="task-progress">`;
+
+    for (const task in progress) {
+      const isComplete = progress[task] === "True";
+      contentHTML += `<div class="task-item">
+        <div class="task-indicator ${isComplete ? 'task-complete' : 'task-incomplete'}"></div>
+        ${task}
+      </div>`;
+    }
+
+    contentHTML += `</div></div>`;
+  }
+
+  // Generate task recommendations
+  const recommendations = generateTaskRecommendations(subject);
+  let recommendationsHTML = `<div class="task-recommendations">
+    <h3>Suggested Tasks</h3>
+    <ul>${recommendations.map(task => `<li>${task}</li>`).join('')}</ul>
+  </div>`;
+
+  modalContent.innerHTML = contentHTML + recommendationsHTML;
+  modalOverlay.style.display = 'flex';
+  
+  // For debugging
+  console.log("Recommendations generated:", recommendations);
+}
+
+// Function to close modal
+function closeModal() {
+  const modalOverlay = document.getElementById('modalOverlay');
+  if (modalOverlay) {
+    modalOverlay.style.display = 'none';
+  }
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', () => {
+  renderSubjects();
+  
+  const closeModalBtn = document.getElementById('closeModal');
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', closeModal);
+  }
+});
     </script>
 </body>
 </html>
