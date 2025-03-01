@@ -389,6 +389,10 @@ def chat():
 def admin_view():
     return render_template('admin_page.html')
 
+@app.route('/user/progress', methods=['GET'])
+def user_progress_view():
+    return render_template('progress_page.html')
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
