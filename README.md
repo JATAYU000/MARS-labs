@@ -71,8 +71,8 @@ As the demand for personalized, AI-driven learning and knowledge management tool
 
 Screenshots:
 -----------
-[](./screenshots/250301_15h45m22s_screenshot.png)
-[](./screenshots/250301_15h43m41s_screenshot.png)
-[](./screenshots/250301_15h40m31s_screenshot.png)
-[](./screenshots/250301_15h40m55s_screenshot.png)
-[](./screenshots/250301_15h37m19s_screenshot.png)
+[img](./screenshots/250301_15h45m22s_screenshot.png)
+[img](./screenshots/250301_15h43m41s_screenshot.png)
+[img](./screenshots/250301_15h40m31s_screenshot.png)
+[img](./screenshots/250301_15h40m55s_screenshot.png)
+[img](./screenshots/250301_15h37m19s_screenshot.png)
