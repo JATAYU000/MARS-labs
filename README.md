@@ -1,7 +1,7 @@
 MARS-labs: Olabs Hackathon Solution
 ===================================
 
-MARS-labs is a solution developed for the Olabs Hackathon. It is built using Python for the backend logic, along with HTML, CSS, and Mako templates for the frontend. The project integrates API endpoints, database interactions, and file uploads into a modular structure.
+MARS-labs is a solution developed for the Olabs Hackathon. It is built using Python for the backend logic, along with HTML, and CSS templates for the frontend. The project integrates API endpoints, database interactions, and file uploads into a modular structure.
 
 Table of Contents
 -----------------
