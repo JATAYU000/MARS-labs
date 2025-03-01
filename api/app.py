@@ -13,6 +13,7 @@ import google.generativeai as genai
 from dotenv import load_dotenv 
 import requests
 import json
+import shutil
 
 # RAG imports
 from langchain_core.globals import set_verbose, set_debug
@@ -127,7 +128,9 @@ class Mentor:
         )
 
         self.vector_store = None
+        self.temp_vector_store = None
         self.retriever = None
+        self.temp_retriever = None
         self.chain = None
         
         # Initialize models BEFORE initializing vector store
@@ -146,6 +149,8 @@ class Mentor:
             
         # Now initialize the vector store after the model is set
         self.init_vector_store()
+        # Initialize temporary vector store for session-specific documents
+        self.init_temp_vector_store()
 
 
     def init_vector_store(self):
@@ -163,7 +168,7 @@ class Mentor:
             # Ensure the retriever uses the stored data
             self.retriever = self.vector_store.as_retriever(
                 search_type="similarity_score_threshold",
-                search_kwargs={"k": 10, "score_threshold": 0.0},
+                search_kwargs={"k": 5, "score_threshold": 0.0},
             )
 
             # Only set up the chain if using Ollama - Gemini will use a separate method
@@ -180,10 +185,35 @@ class Mentor:
 
         except Exception as e:
             print(f"Error initializing vector store: {e}")
+            
+    def init_temp_vector_store(self, session_id=None):
+        """Initialize a temporary vector store for session-specific documents"""
+        try:
+            # Create a unique directory for this session if provided
+            persist_dir = f"temp_chroma_{session_id}" if session_id else None
+            
+            # Create a temporary in-memory vector store
+            self.temp_vector_store = Chroma(
+                collection_name="temp_docs",
+                embedding_function=self.embedding_function,
+                persist_directory=persist_dir
+            )
+            
+            # Set up the temporary retriever
+            self.temp_retriever = self.temp_vector_store.as_retriever(
+                search_type="similarity_score_threshold",
+                search_kwargs={"k": 5, "score_threshold": 0.0},
+            )
+            
+            print("Temporary vector store initialized successfully!")
+            return True
+        except Exception as e:
+            print(f"Error initializing temporary vector store: {e}")
+            return False
 
 
     def ingest(self, file_path):
-        """Process and ingest a document into the vector store"""
+        """Process and ingest a document into the persistent vector store"""
         try:
             # Load the document
             loader = PyPDFLoader(file_path)
@@ -203,18 +233,57 @@ class Mentor:
         except Exception as e:
             print(f"Error ingesting document: {e}")
             return 0
+            
+    def ingest_temp(self, file_path, session_id=None):
+        """Process and ingest a document into the temporary vector store"""
+        try:
+            # Load the document
+            loader = PyPDFLoader(file_path)
+            documents = loader.load()
+            
+            # Add source metadata to identify this as a temporary document
+            for doc in documents:
+                doc.metadata["source"] = "temp_upload"
+                doc.metadata["session_id"] = session_id if session_id else "unknown"
+            
+            # Split the documents into chunks
+            splits = self.text_splitter.split_documents(documents)
+            
+            # Ensure temporary vector store is initialized
+            if not self.temp_vector_store:
+                self.init_temp_vector_store(session_id)
+                
+            # Add documents to temporary vector store
+            self.temp_vector_store.add_documents(splits)
+            
+            # If we have a persist directory, save it
+            if session_id:
+                self.temp_vector_store.persist()
+            
+            return len(splits)
+        except Exception as e:
+            print(f"Error ingesting temporary document: {e}")
+            return 0
 
     def ask(self, query):
-        """Query the knowledge base using the selected model"""
+        """Query both knowledge bases using the selected model"""
         if not self.vector_store:
             return "No documents have been ingested yet. Please upload documents first."
         
         try:
-            if not self.retriever:
-                self.init_vector_store()
-
-            retrieved_docs = self.retriever.invoke(query)
-            context = "\n\n".join([doc.page_content for doc in retrieved_docs])
+            # Retrieve from both vector stores if available
+            main_docs = self.retriever.invoke(query) if self.retriever else []
+            temp_docs = self.temp_retriever.invoke(query) if self.temp_retriever else []
+            
+            # Combine contexts from both sources with labels
+            all_docs = main_docs + temp_docs
+            
+            # If we got no relevant documents, inform the user
+            if not all_docs:
+                return "I couldn't find any relevant information to answer your question. Please try rephrasing or asking a different question."
+            
+            # Prepare combined context
+            context = "\n\n".join([doc.page_content for doc in all_docs])
 
             if self.selected_model == "ollama":
                 # Use the remote Ollama wrapper instead of the chain
@@ -229,7 +298,7 @@ class Mentor:
             return f"An error occurred: {str(e)}"
 
     def generate_answer_with_gemini(self, query, context):
-        """Generate an answer using Gemini with NCERT context."""
+        """Generate an answer using Gemini with the provided context."""
         prompt = f"""
             You are an expert mentor providing personalized guidance based on the following context. 
 
@@ -255,13 +324,28 @@ class Mentor:
         return response.text
 
     def clear(self):
-        """Clear the vector store"""
+        """Clear the persistent vector store"""
         if self.vector_store:
             try:
                 self.vector_store.delete_collection()
                 self.init_vector_store()
             except Exception as e:
                 print(f"Error clearing vector store: {e}")
+                
+    def clear_temp(self, session_id=None):
+        """Clear the temporary vector store"""
+        if self.temp_vector_store:
+            try:
+                self.temp_vector_store.delete_collection()
+                self.init_temp_vector_store(session_id)
+                
+                # Clean up the directory if it exists
+                if session_id:
+                    temp_dir = f"temp_chroma_{session_id}"
+                    if os.path.exists(temp_dir):
+                        shutil.rmtree(temp_dir)
+            except Exception as e:
+                print(f"Error clearing temporary vector store: {e}")
 
     def load_embeddings(self, path):
         """Load pre-generated embeddings"""
@@ -285,8 +369,11 @@ app.secret_key = "your_secret_key_here"
 
 # Configure file uploads
 UPLOAD_FOLDER = "uploads"
+TEMP_UPLOAD_FOLDER = "temp_uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(TEMP_UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["TEMP_UPLOAD_FOLDER"] = TEMP_UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
 
 # Initialize database
@@ -470,7 +557,7 @@ def user_progress_view():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    """Handle document uploads"""
+    """Handle document uploads for the permanent vector store"""
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
     
@@ -507,6 +594,40 @@ def upload_file():
     return jsonify({'messages': responses}), 200
 
 
+@app.route('/upload/temp', methods=['POST'])
+def upload_temp_file():
+    """Handle document uploads for temporary session-specific vector store"""
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    files = request.files.getlist('file')
+    if not files or files[0].filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+    
+    session_id = ensure_session()
+    assistant = chat_instances[session_id]
+    
+    responses = []
+    for file in files:
+        filename = secure_filename(file.filename)
+        
+        # Save to the temp uploads folder
+        temp_file_path = os.path.join(app.config["TEMP_UPLOAD_FOLDER"], f"{session_id}_{filename}")
+        file.save(temp_file_path)
+        
+        start_time = time.time()
+        chunks_processed = assistant.ingest_temp(temp_file_path, session_id)
+        processing_time = time.time() - start_time
+        
+        response = f"Added temporary document {filename} for this session ({chunks_processed} chunks)"
+        responses.append(response)
+        
+        # Update session messages
+        session['messages'].append({'content': response, 'is_user': False})
+    
+    return jsonify({'messages': responses, 'temp_docs_added': True}), 200
+
+
 @app.route('/ask', methods=['POST'])
 def ask_question():
     """Process user questions"""
@@ -515,6 +636,7 @@ def ask_question():
     model_selection = data.get('model')
     user_id = data.get('user_id')
     chat_history = data.get('chat_history', [])
+    use_temp_docs = data.get('use_temp_docs', True)  # Default to using temporary docs if available
 
     print(data)
 
@@ -524,10 +646,24 @@ def ask_question():
     session_id = ensure_session()
     
     if model_selection and chat_instances[session_id].selected_model != model_selection:
+        # Save the temporary vector store before recreating the instance
+        temp_vector_store = None
+        if session_id in chat_instances and chat_instances[session_id].temp_vector_store:
+            temp_vector_store = chat_instances[session_id].temp_vector_store
+        
         chat_instances[session_id] = Mentor(selected_model=model_selection)
+        
+        # Restore temporary vector store if it existed
+        if temp_vector_store:
+            chat_instances[session_id].temp_vector_store = temp_vector_store
+            chat_instances[session_id].temp_retriever = temp_vector_store.as_retriever(
+                search_type="similarity_score_threshold",
+                search_kwargs={"k": 5, "score_threshold": 0.0},
+            )
     
     assistant = chat_instances[session_id]
-    #handle chat history 
+    
+    # Handle chat history 
     if chat_history:
         pass
     else:
@@ -561,17 +697,43 @@ def ask_question():
     }), 200
 
 
-
 @app.route('/clear', methods=['POST'])
 def clear_conversation():
-    """Clear the conversation history"""
+    """Clear the conversation history and temporary vector store"""
     session_id = session.get('session_id')
     if session_id and session_id in chat_instances:
-        chat_instances[session_id].clear()
+        # Only clear the temporary store, not the persistent one
+        chat_instances[session_id].clear_temp(session_id)
+        
+        # Clean up temp files
+        for file in os.listdir(app.config["TEMP_UPLOAD_FOLDER"]):
+            if file.startswith(f"{session_id}_"):
+                try:
+                    os.remove(os.path.join(app.config["TEMP_UPLOAD_FOLDER"], file))
+                except Exception as e:
+                    print(f"Error removing temporary file: {e}")
     
     session['messages'] = []
     
     return jsonify({'status': 'success'}), 200
+
+
+@app.route('/clear/temp', methods=['POST'])
+def clear_temp_documents():
+    """Clear only the temporary documents"""
+    session_id = session.get('session_id')
+    if session_id and session_id in chat_instances:
+        chat_instances[session_id].clear_temp(session_id)
+        
+        # Clean up temp files
+        for file in os.listdir(app.config["TEMP_UPLOAD_FOLDER"]):
+            if file.startswith(f"{session_id}_"):
+                try:
+                    os.remove(os.path.join(app.config["TEMP_UPLOAD_FOLDER"], file))
+                except Exception as e:
+                    print(f"Error removing temporary file: {e}")
+    
+    return jsonify({'status': 'success', 'message': 'Temporary documents cleared'}), 200
 
 
 @app.route('/users', methods=['GET'])
