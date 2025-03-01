@@ -37,16 +37,17 @@ load_dotenv()
 # Selecting the model
 selected_model = "gemini"
 
+ng_uri = os.getenv("NGROK_URI")
 # Ngrok Ollama configuration from the first file
-NGROK_OLLAMA_URL = "https://1385-2409-40f3-204a-94e5-dc0c-5d67-f427-c9d7.ngrok-free.app"
+NGROK_OLLAMA_URL = ng_uri
 HEADERS = {
-    "Host": "1385-2409-40f3-204a-94e5-dc0c-5d67-f427-c9d7.ngrok-free.app",
+    "Host": ng_uri,
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.5",
     "Accept-Encoding": "gzip, deflate, br, zstd",
     "Connection": "keep-alive",
-    "Cookie": "abuse_interstitial=1385-2409-40f3-204a-94e5-dc0c-5d67-f427-c9d7.ngrok-free.app",
+    "Cookie": f"abuse_{ng_uri}",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Fetch-Dest": "document",
     "Sec-Fetch-Mode": "navigate",
