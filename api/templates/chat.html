@@ -509,13 +509,32 @@
             background-color: #d10448;
             color: white;
         }
+    
+    /* Simple speak button */
+#speakButton {
+    font-size: 16px;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 8px 12px;
+    background-color: #d10448;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+#speakButton:hover {
+    background-color: #9e0337;
+}
+
+#speakButton:active {
+    background-color: #d5d5d5;
+}
+    
     </style>
     <title>Chat UI</title>
 </head>
 <body>
-    <div style="display:none">
-        <embed id = "audio" src="sound.mp3"/> 
-     </div>
+    <audio id="audio" controls style="display: none;"></audio>
+
      
     <div class="chat-container">
         <div class="chat-header">
@@ -572,6 +591,8 @@
                     <div class="typing-dot"></div>
                 </div>
             </div>
+            <i class="fas fa-volume-up" id="speakButton"></i>
+            <i class="fas fa-paperclip" id="attachButton" style="margin-left: 10px; cursor: pointer;"></i>
         </div>
         
         <div class="input-container">
@@ -632,64 +653,96 @@
     audioButton.addEventListener('click', startRecording);
     stopRecording.addEventListener('click', endRecording);
     cancelRecording.addEventListener('click', cancelAudioRecording);
-    async function generateSpeech(text) {
-        console.log('generating')
+    const speakButton = document.getElementById('speakButton');
+        
+    
+
+        speakButton.addEventListener('click', function() {
+            // Find the latest receiver message
+            const messages = document.querySelectorAll('.receiver-message');
+            if (messages.length === 0) return;
+            
+            const latestMessage = messages[messages.length - 1];
+            const messageText = latestMessage.querySelector('.message-text').textContent;
+            
+           
+            // Generate speech
+            generateSpeech(messageText)
+        });
+        
+        // Modified audio ended event listener
+        const audioElement = document.getElementById('audio');
+        audioElement.addEventListener('ended', function() {
+            // Restore the original icon when audio ends
+            const speakButton = document.getElementById('speakButton');
+        });
+        
+        // Modified generateSpeech function to return a promise
+        window.generateSpeech = function(text) {
+            console.log('Generating speech');
+            const apiKey = 'c9fbeb6eb6msh698c4c9bd34b5ddp161568jsnbd66e975b9f9';
+            const apiHost = 'natural-text-to-speech-converter-at-lowest-price.p.rapidapi.com';
+            const url = 'https://natural-text-to-speech-converter-at-lowest-price.p.rapidapi.com/';
+            
             if (!text) {
-                alert("Please enter text.");
-                return;
+                return Promise.reject("No text provided");
             }
             
-            const response1 = await fetch('https://client.camb.ai/apis/tts', {
-                method: 'POST',
-                headers: {
-                    'x-api-key': apiKey,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    text: text,
-                    voice_id: 20305,
-                    language: 1,
-                    gender: 2,
-                    age: 2
-                })
+            return new Promise((resolve, reject) => {
+                const postOptions = {
+                    method: 'POST',
+                    headers: {
+                        'x-rapidapi-key': apiKey,
+                        'x-rapidapi-host': apiHost,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        msg: text,
+                        lang: 'Salli',
+                        source: 'ttsmp3'
+                    })
+                };
+                
+                fetch(url, postOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log("API Response:", result);
+                        
+                        if (!result || result.Error !== 0 || !result.URL) {
+                            console.error("Error generating speech: ", result.Text || "Unknown error");
+                            reject("Error generating speech");
+                            return;
+                        }
+                        
+                        console.log("Generated MP3 URL:", result.URL);
+                        
+                        const audioElement = document.getElementById("audio");
+                        
+                        if (!audioElement || !(audioElement instanceof HTMLAudioElement)) {
+                            console.error("Audio element not found or invalid.");
+                            reject("Audio element is missing");
+                            return;
+                        }
+                        
+                        // Set audio element source directly to URL
+                        audioElement.src = result.URL;
+                        audioElement.style.display = "none";
+                        
+                        console.log("Attempting to play audio from:", result.URL);
+                        
+                        audioElement.play()
+                            .then(() => resolve())
+                            .catch(error => {
+                                console.error("Playback failed:", error);
+                                reject("Playback failed");
+                            });
+                    })
+                    .catch(error => {
+                        console.error("Error in speech generation:", error);
+                        reject("An error occurred while generating speech");
+                    });
             });
-            const data1 = await response1.json();
-            if (!data1.task_id) {
-                console.error("Error generating speech", data1);
-                return;
-            }
-            
-            const taskId = data1.task_id;
-            
-            let status = "";
-            let runId = null;
-            do {
-                await new Promise(r => setTimeout(r, 2000)); // Wait for 2 seconds
-                const response2 = await fetch(`https://client.camb.ai/apis/tts/${taskId}`, {
-                    method: 'GET',
-                    headers: { 'x-api-key': apiKey }
-                });
-                const data2 = await response2.json();
-                status = data2.status;
-                runId = data2.run_id;
-            } while (status !== "SUCCESS" && status !== "FAILED");
-            
-            if (status === "FAILED") {
-                console.error("Speech generation failed");
-                return;
-            }
-            
-            const response3 = await fetch(`https://client.camb.ai/apis/tts-result/${runId}`, {
-                method: 'GET',
-                headers: { 'x-api-key': apiKey }
-            });
-            const audioBlob = await response3.blob();
-            const audioUrl = URL.createObjectURL(audioBlob);
-            
-            const audioElement = document.getElementById("audio");
-            audioElement.src = audioUrl;
-            audioElement.play();
-        }
+        };
     
     async function startRecording() {
         try {
@@ -919,7 +972,7 @@
     if (!isSender) {
         if (text.trim().length) {
             console.log("recived message to speek")
-            generateSpeech(text)
+            // generateSpeech(text)
         }
     }
 }
@@ -948,7 +1001,7 @@ function sendMessage() {
                 is_user: msg.classList.contains('sender-message')
             });
         });
-
+        console.log(window.location.href)
         fetch('/ask', {
             method: 'POST',
             headers: {
