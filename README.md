@@ -39,6 +39,11 @@ Usage
     python3 api/app.py
     ```
 
+Additional
+----------
+- **Collab Notebook** : https://colab.research.google.com/drive/1yYQGq3-ow0Fy1OuigYvsH9bi6KDl4kM3?usp=sharing
+  
+
 Key Features & Benefits:
 ------------------------
 
@@ -62,3 +67,12 @@ MARS-labs integrates Flask as its web framework with a SQLAlchemy-backed databas
 
 **Market Opportunity:**
 As the demand for personalized, AI-driven learning and knowledge management tools grows, MARS-labs positions itself as a key enabler for educational institutions and enterprises. By offering an intuitive chat interface coupled with precise, context-rich responses, it fills a crucial gap in the market for scalable, interactive mentorship platform
+
+
+Screenshots:
+-----------
+[](./screenshots/250301_15h45m22s_screenshot.png)
+[](./screenshots/250301_15h43m41s_screenshot.png)
+[](./screenshots/250301_15h40m31s_screenshot.png)
+[](./screenshots/250301_15h40m55s_screenshot.png)
+[](./screenshots/250301_15h37m19s_screenshot.png)
