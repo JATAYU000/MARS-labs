@@ -763,23 +763,33 @@
             
             function sendMessage() {
                 const message = messageInput.value.trim();
-
+                
                 if (message) {
                     addMessage(message, true);
                     messageInput.value = '';
+                    
                     typingIndicator.style.display = 'flex';
                     scrollToBottom();
+                    
+                    // Collect chat history
+                    const chatHistory = [];
+                    document.querySelectorAll('.message').forEach(msg => {
+                        chatHistory.push({
+                            content: msg.querySelector('.message-text').textContent,
+                            is_user: msg.classList.contains('sender-message')
+                        });
+                    });
+            
                     fetch('/ask', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ message: message, model: botName.textContent }),
+                        body: JSON.stringify({ message: message, model: botName.textContent, user_id: 1, chat_history: chatHistory }),
                     })
                     .then(response => response.json())
                     .then(data => {
                         typingIndicator.style.display = 'none';
-
                         addMessage(data.response, false);
                     })
                     .catch(error => {
@@ -880,35 +890,6 @@
                 }
             });
             
-            function sendMessage() {
-                const message = messageInput.value.trim();
-                
-                if (message) {
-                    addMessage(message, true);
-                    messageInput.value = '';
-                    
-                    typingIndicator.style.display = 'flex';
-                    scrollToBottom();
-            
-                    fetch('/ask', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ message: message, model: botName.textContent }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        typingIndicator.style.display = 'none';
-                        addMessage(data.response, false);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        typingIndicator.style.display = 'none';
-                        addMessage("Sorry, there was an error processing your request.", false);
-                    });
-                }
-            }
             avatarButton.addEventListener('click', function() {
                 modelSelection.classList.toggle('active');
             });

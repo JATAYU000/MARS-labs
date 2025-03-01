@@ -1,0 +1,59 @@
+### Add a new user
+POST http://localhost:5000/update
+Content-Type: application/json
+
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "age": "16"
+}
+
+### Add another new user
+POST http://localhost:5000/update
+Content-Type: application/json
+
+{
+  "first_name": "Jane",
+  "last_name": "Smith",
+  "age": "17"
+}
+
+### Add progress for the first user
+POST http://localhost:5000/progress
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "progress_data": {
+    "class": 12,
+    "subject_progress": {
+      "phy": {
+        "completed_experiments": ["ohms law"],
+        "completed_quizzes": ["ohms law"]
+      }
+    }
+  }
+}
+
+### Add progress for the second user
+POST http://localhost:5000/progress
+Content-Type: application/json
+
+{
+  "user_id": 2,
+  "progress_data": {
+    "class": 12,
+    "subject_progress": {
+      "chem": {
+        "completed_experiments": ["titration"],
+        "completed_quizzes": ["mole concept"]
+      }
+    }
+  }
+}
+
+### Get progress for the first user
+GET http://localhost:5000/progress/1
+
+### Get progress for the second user
+GET http://localhost:5000/progress/2
