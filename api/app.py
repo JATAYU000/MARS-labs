@@ -38,6 +38,7 @@ load_dotenv()
 selected_model = "gemini"
 
 ng_uri = os.getenv("NGROK_URI")
+ollama_model = os.getenv("OLLAMA_MODEL")
 # Ngrok Ollama configuration from the first file
 NGROK_OLLAMA_URL = ng_uri
 HEADERS = {
@@ -92,7 +93,7 @@ class RemoteOllamaWrapper:
 
 
 class Mentor:
-    def __init__(self, llm_model="phi3", selected_model="ollama"):
+    def __init__(self, llm_model=ollama_model, selected_model="ollama"):
         self.selected_model = selected_model
         self.llm_model = llm_model
         self.text_splitter = RecursiveCharacterTextSplitter(
@@ -294,7 +295,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-# Store active chat instances
+
 chat_instances = {}
 
 # Define database models
@@ -647,13 +648,11 @@ def cleanup_old_instances():
         if key == 'session_id':
             all_session_ids.add(session[key])
     
-    # Remove chat instances that aren't associated with any active session
     for chat_id in list(chat_instances.keys()):
         if chat_id not in all_session_ids:
             del chat_instances[chat_id]
 
 
-# Initialize database tables
 with app.app_context():
     db.create_all()
 
