@@ -38,3 +38,27 @@ Usage
     ```
     python3 api/app.py
     ```
+
+Key Features & Benefits:
+------------------------
+
+-    **Advanced Conversational AI**
+    Utilizes leading language models (with support for both ChatOllama and Gemini) to generate human-like, insightful answers that adapt to users' progress and context.
+
+-   **Dynamic Document Ingestion & Retrieval**
+    Converts uploaded documents (e.g., PDFs) into vector embeddings using cutting-edge models (like HuggingFace's e5-base), allowing the system to "understand" and recall specific content. This empowers users to ask questions based on detailed, domain-specific documents.
+
+-   **Personalized Mentorship**
+    By integrating user progress data and chat history, MARS-labs tailors responses to each user, enhancing learning outcomes and ensuring that guidance is both relevant and supportive.
+
+-   **Scalable & Modular Architecture**
+    Built on Flask with SQLAlchemy for robust session management and multiple database support, the platform is designed to scale. Its modular codebase supports future integrations and easy model switching based on evolving user needs.
+
+-   **Rapid Deployment & Innovation**
+    Born out of a hackathon environment, MARS-labs embodies agile development and innovative problem solving. It proves that high-quality, enterprise-grade solutions can emerge in fast-paced, competitive settings.
+
+**Technical Overview:**
+MARS-labs integrates Flask as its web framework with a SQLAlchemy-backed database to handle user progress and file uploads. It uses LangChain and ChromaDB to manage document ingestion and similarity search. The system's flexible design allows for the dynamic selection of LLMs, making it future-proof in an ever-changing AI landscape.
+
+**Market Opportunity:**
+As the demand for personalized, AI-driven learning and knowledge management tools grows, MARS-labs positions itself as a key enabler for educational institutions and enterprises. By offering an intuitive chat interface coupled with precise, context-rich responses, it fills a crucial gap in the market for scalable, interactive mentorship platform
