@@ -11,12 +11,13 @@ import chromadb
 import numpy as np
 import google.generativeai as genai
 from dotenv import load_dotenv 
+import requests
+import json
 
 # RAG imports
 from langchain_core.globals import set_verbose, set_debug
 from langchain_community.vectorstores import Chroma
 from langchain_community.chat_models import ChatOllama
-#from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.schema import Document
 from langchain.schema.output_parser import StrOutputParser
@@ -36,10 +37,63 @@ load_dotenv()
 # Selecting the model
 selected_model = "gemini"
 
+# Ngrok Ollama configuration from the first file
+NGROK_OLLAMA_URL = "https://1385-2409-40f3-204a-94e5-dc0c-5d67-f427-c9d7.ngrok-free.app"
+HEADERS = {
+    "Host": "1385-2409-40f3-204a-94e5-dc0c-5d67-f427-c9d7.ngrok-free.app",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Connection": "keep-alive",
+    "Cookie": "abuse_interstitial=1385-2409-40f3-204a-94e5-dc0c-5d67-f427-c9d7.ngrok-free.app",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Priority": "u=0, i",
+    "TE": "trailers",
+    "Content-Type": "application/json"
+}
+
+class RemoteOllamaWrapper:
+    """A wrapper class to handle Ollama API calls through ngrok"""
+    def __init__(self, model="phi3"):
+        self.model = model
+        self.url = NGROK_OLLAMA_URL
+        self.headers = HEADERS
+    
+    def invoke(self, prompt):
+        """Send a prompt to the remote Ollama instance and return the response"""
+        try:
+            ollama_data = {"model": self.model, "prompt": prompt}
+            response = requests.post(
+                f"{self.url}/api/generate",
+                json=ollama_data,
+                headers=self.headers
+            )
+            
+            # For non-streaming, collect and combine all token responses
+            full_text = ""
+            for line in response.text.strip().split('\n'):
+                try:
+                    data = json.loads(line)
+                    if 'response' in data:
+                        full_text += data['response']
+                except json.JSONDecodeError:
+                    pass
+            
+            return full_text
+        except Exception as e:
+            print(f"Error calling remote Ollama: {e}")
+            return f"Error: {str(e)}"
+
 
 class Mentor:
-    def __init__(self, llm_model="qwen2.5", selected_model="ollama"):
+    def __init__(self, llm_model="phi3", selected_model="ollama"):
         self.selected_model = selected_model
+        self.llm_model = llm_model
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=512, chunk_overlap=100
         )
@@ -50,22 +104,23 @@ class Mentor:
         # Prompt template for answering questions
         self.prompt = ChatPromptTemplate.from_template(
             """
-            You are an experienced and knowledgeable mentor, guiding users by answering their questions strictly based on the provided context. Your responses should be clear, accurate, and helpful while maintaining a friendly and supportive tone.
+            You are an expert mentor providing personalized guidance based on the following context. 
 
-            Instructions:
-                You can use other context than what is provided but we prioritize the provided context.
-                Your responses should be concise and to the point.
-                Make sure to provide accurate and helpful information.
-                Maintain a friendly and supportive tone throughout the conversation 
-                translate if it is not in English and reply in the same language 
-                the question will also have the users current progress data
-                use the current progress data to provide a more personalized response if only required
-                If chat history is provided in the user input, use it to provide a more personalized response if only required
-                Keep in mind that this a rag based implementation and there are two models 
-                So If the chat history has an indication that the model was changed keep that in mind while answering the question
-            Context: {context}
+            CONTEXT: {context}
 
-            user input: {question}
+            USER QUERY: {question}
+
+            INSTRUCTIONS:
+            1. Prioritize information from the provided context, but supplement with general knowledge when necessary.
+            2. Deliver concise but sufficiently explanatory, factually accurate responses with examples(if available) that directly address the query.
+            3. Do not mention the text, if it is from the text or outside the text, just give the response and don't specify whether it is form the text or outside.
+            4. Consider the chat history (included in the query) to personalize your guidance.
+            5. Maintain a supportive, encouraging tone throughout.
+            6. If the user's input is not in English, respond in the same language.
+            7. If chat history shows a model switch occurred, adjust your response style accordingly.
+            8. Remember this is a RAG (Retrieval-Augmented Generation) implementation using two models.
+
+            Respond in a clear, helpful manner that builds the user's confidence while providing accurate information.
             """
         )
 
@@ -75,6 +130,9 @@ class Mentor:
         
         # Initialize models BEFORE initializing vector store
         if selected_model == "ollama":
+            # Use the remote Ollama wrapper instead of local ChatOllama
+            self.remote_ollama = RemoteOllamaWrapper(model=llm_model)
+            # We'll still use ChatOllama for the chain setup, but override its invoke method
             self.model = ChatOllama(model=llm_model)
         elif selected_model == "gemini":
             if not self.gemini_api_key:
@@ -156,8 +214,10 @@ class Mentor:
             retrieved_docs = self.retriever.invoke(query)
             context = "\n\n".join([doc.page_content for doc in retrieved_docs])
 
-            if self.selected_model == "ollama" and self.chain is not None:
-                return self.chain.invoke(query)
+            if self.selected_model == "ollama":
+                # Use the remote Ollama wrapper instead of the chain
+                formatted_prompt = self.prompt.format(context=context, question=query)
+                return self.remote_ollama.invoke(formatted_prompt)
             elif self.selected_model == "gemini":
                 return self.generate_answer_with_gemini(query, context)
             else:
@@ -546,8 +606,6 @@ def create():
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': f'Error: {str(e)}'}), 500
-
-
 
 
 @app.route("/upload_npy", methods=["POST"])
